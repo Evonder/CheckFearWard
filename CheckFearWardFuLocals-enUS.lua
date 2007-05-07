@@ -5,5 +5,11 @@ L:RegisterTranslations("enUS", function() return {
 	["Show low time"] = true,
 	["Show high time in FuBar text"] = true,
 	["Show low time in FuBar text"] = true,
+	["Status Notification"] = true,
+	["Where to show Fear Wards status notifications"] = true,
+	["Warn in Chat Window"] = true,
+	["Warn in Blizzard default chat window"] = true,
+	["Warn in CTRA Style"] = true,
+	["Warn in CT_RA raid warning style"] = true,
 	["NO FEARWARDS"] = true,
 } end)

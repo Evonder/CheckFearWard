@@ -31,13 +31,49 @@ local options = {
 				CheckFearWardFu:Update()
 			end,
 		},
+                statusNotification = {
+			type = 'group',
+			name = L["Status Notification"],
+			desc = L["Where to show Fear Wards status notifications"],
+			args = {
+                              DCF = {
+                                    type = "toggle",
+			            name = L["Warn in Chat Window"],
+			            desc = L["Warn in Blizzard default chat window"],
+			            get = function() return CheckFearWardFu.db.profile.DCF end,
+			            set = function()
+			            	CheckFearWardFu.db.profile.DCF = not CheckFearWardFu.db.profile.DCF
+			            	CheckFearWardFu:Update()
+			            end,
+		            },
+                            CTRA = {
+			            type = "toggle",
+			            name = L["Warn in CTRA Style"],
+			            desc = L["Warn in CT_RA raid warning style"],
+			            get = function() return CheckFearWardFu.db.profile.CTRA end,
+			            set = function()
+			            	CheckFearWardFu.db.profile.CTRA = not CheckFearWardFu.db.profile.CTRA
+			            	CheckFearWardFu:Update()
+			            end,
+		            },
+                        }
+                  },
 
-	}
+	},
 }
 CheckFearWardFu:RegisterChatCommand({"/fwfu"}, options)
 
 
 	-- Methods
+function CheckFearWardFu:announce_lost_buff(unit)
+	if(CheckFearWardFu.db.profile.DCF == true) then
+		DEFAULT_CHAT_FRAME:AddMessage("*** "..UnitName(unit).." has lost their FEARWARD! ***", 1, 1, 1, 1, 5)
+	elseif(CheckFearWardFu.db.profile.CTRA == true) then
+		RaidWarningFrame:AddMessage("*** "..UnitName(unit).." has lost their FEARWARD! ***", 1, 1, 1, 1, 5)
+	end
+        PlaySoundFile("Interface\\AddOns\\" .. CheckFearWardFu.folderName .. "\\Alert5.wav")
+end
+
 function CheckFearWardFu:IsShowingHigh()
 	return self.db.profile.showHigh
 end
@@ -58,6 +94,26 @@ function CheckFearWardFu:ToggleShowingLow()
 	return self.db.profile.showLow
 end
 
+function CheckFearWardFu:IsDCF()
+	return self.db.profile.DCF
+end
+
+function CheckFearWardFu:ToggleDCF()
+	self.db.profile.DCF = not self.db.profile.DCF
+	self:Update()
+	return self.db.profile.DCF
+end
+
+function CheckFearWardFu:IsCTRA()
+	return self.db.profile.CTRA
+end
+
+function CheckFearWardFu:ToggleCTRA()
+	self.db.profile.CTRA = not self.db.profile.CTRA
+	self:Update()
+	return self.db.profile.CTRA
+end
+
 function CheckFearWardFu:OnInitialize()
 		self.BUFF_SEARCH_STRING = "Fear Ward"
 end
@@ -73,24 +129,7 @@ function CheckFearWardFu:OnEnable()
 	self:ScheduleRepeatingEvent("UpdateSelf",self.Update,1,self);
 end
 
-function CheckFearWardFu:OnMenuRequest(level, value, inTooltip)
-	if level == 1 then
-		dewdrop:AddLine(
-			'text', L["Show high time"],
-			'arg1', self,
-			'func', "ToggleShowingHigh",
-			'checked', self:IsShowingHigh(),
-			'closeWhenClicked', false
-		)
-		dewdrop:AddLine(
-			'text', L["Show low time"],
-			'arg1', self,
-			'func', "ToggleShowingLow",
-			'checked', self:IsShowingLow(),
-			'closeWhenClicked', false
-		)
-	end
-end
+CheckFearWardFu.OnMenuRequest = options
 
 function CheckFearWardFu:OnDataUpdate()
 	local numraid = GetNumRaidMembers()
@@ -172,16 +211,6 @@ function CheckFearWardFu:check_status(unit)
 		if((time() - members[UnitName(unit)]) < self.current_low) then
 			self.current_low = members[UnitName(unit)];
 		end
-end
-
-function CheckFearWardFu:announce_lost_buff(unit)
-	if(DEFAULT_CHAT_FRAME) then
-		DEFAULT_CHAT_FRAME:AddMessage("*** "..UnitName(unit).." has lost their FEARWARD! ***", 1, 1, 1, 1, 5)
-	end
-	if(CT_RAMessageFrame) then
-		CT_RAMessageFrame:AddMessage("*** "..UnitName(unit).." has lost their FEARWARD! ***", 1, 1, 1, 1, 5)
-	end
-        PlaySoundFile("Interface\\AddOns\\" .. CheckFearWardFu.folderName .. "\\Alert5.wav")
 end
 		
 function CheckFearWardFu:check_buff_present(unit)
