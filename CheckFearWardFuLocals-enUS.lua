@@ -11,5 +11,7 @@ L:RegisterTranslations("enUS", function() return {
 	["Warn in Blizzard default chat window"] = true,
 	["Warn in CTRA Style"] = true,
 	["Warn in CT_RA raid warning style"] = true,
+	["Audible Warning"] = true,
+	["Enable Audible Warning on loss of Fear Ward"] = true,
 	["NO FEARWARDS"] = true,
 } end)

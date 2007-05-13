@@ -56,6 +56,16 @@ local options = {
 			            	CheckFearWardFu:Update()
 			            end,
 		            },
+                            audible = {
+			            type = "toggle",
+			            name = L["Audible Warning"],
+			            desc = L["Enable Audible Warning on loss of Fear Ward"],
+			            get = function() return CheckFearWardFu.db.profile.audible end,
+			            set = function()
+			            	CheckFearWardFu.db.profile.audible = not CheckFearWardFu.db.profile.audible
+			            	CheckFearWardFu:Update()
+			            end,
+		            },
                         }
                   },
 
@@ -65,15 +75,6 @@ CheckFearWardFu:RegisterChatCommand({"/fwfu"}, options)
 
 
 	-- Methods
-function CheckFearWardFu:announce_lost_buff(unit)
-	if(CheckFearWardFu.db.profile.DCF == true) then
-		DEFAULT_CHAT_FRAME:AddMessage("*** "..UnitName(unit).." has lost their FEARWARD! ***", 1, 1, 1, 1, 5)
-	elseif(CheckFearWardFu.db.profile.CTRA == true) then
-		RaidWarningFrame:AddMessage("*** "..UnitName(unit).." has lost their FEARWARD! ***", 1, 1, 1, 1, 5)
-	end
-        PlaySoundFile("Interface\\AddOns\\" .. CheckFearWardFu.folderName .. "\\Alert5.wav")
-end
-
 function CheckFearWardFu:IsShowingHigh()
 	return self.db.profile.showHigh
 end
@@ -114,6 +115,16 @@ function CheckFearWardFu:ToggleCTRA()
 	return self.db.profile.CTRA
 end
 
+function CheckFearWardFu:Isaudible()
+	return self.db.profile.audible
+end
+
+function CheckFearWardFu:Toggleaudible()
+	self.db.profile.audible = not self.db.profile.audible
+	self:Update()
+	return self.db.profile.audible
+end
+
 function CheckFearWardFu:OnInitialize()
 		self.BUFF_SEARCH_STRING = "Fear Ward"
 end
@@ -130,6 +141,17 @@ function CheckFearWardFu:OnEnable()
 end
 
 CheckFearWardFu.OnMenuRequest = options
+function CheckFearWardFu:announce_lost_buff(unit)
+	if(CheckFearWardFu.db.profile.DCF == true) then
+		DEFAULT_CHAT_FRAME:AddMessage("*** "..UnitName(unit).." has lost their FEARWARD! ***", 1, 1, 1, 1, 5)
+        end
+	if(CheckFearWardFu.db.profile.CTRA == true) then
+		RaidWarningFrame:AddMessage("*** "..UnitName(unit).." has lost their FEARWARD! ***", 1, 1, 1, 1, 5)
+        end
+        if(CheckFearWardFu.db.profile.audible == true) then
+                PlaySoundFile("Interface\\AddOns\\" .. CheckFearWardFu.folderName .. "\\Alert5.wav")
+	end
+end
 
 function CheckFearWardFu:OnDataUpdate()
 	local numraid = GetNumRaidMembers()

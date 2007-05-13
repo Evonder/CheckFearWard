@@ -11,5 +11,7 @@ L:RegisterTranslations("deDE", function() return {
 	["Im Blizzardrückstellung Schwätzchenfenster warnen"] = true,
 	["In der CTRA Art warnen"] = true,
 	["In warnender Art des CT_RA überfalls warnen"] = true,
+	["Hörbare Warnung "] = true,
+	["Hörbarer Warnung auf Verlust des Furcht-Bezirks ermöglichen"] = true,
 	["KEIN FEARWARDS "] = true,
 } end)
