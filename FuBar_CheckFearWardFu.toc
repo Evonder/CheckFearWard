@@ -1,4 +1,4 @@
-## Interface: 20003
+## Interface: 20100
 ## Title: FuBar - |cffffffffCheckFearWard|r|cff00ff00Fu|r
 ## Notes: Tracks the current Fear Ward's in the raid or party.
 ## Author: CheckSoulstonesFu by lilcure - modified to CheckFearWardFu by Networkerror
