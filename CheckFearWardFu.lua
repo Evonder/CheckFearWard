@@ -283,7 +283,7 @@ end
 
 function CheckFearWardFu:calculate_time_left(recorded_time)
 	local elapsed_seconds = time() - recorded_time
-	local total_seconds = 1800 - elapsed_seconds
+	local total_seconds = 600 - elapsed_seconds
 	local leftover_seconds = mod(total_seconds,60)
 	local total_minutes = (total_seconds - leftover_seconds) / 60
 	local seconds_string = ""
