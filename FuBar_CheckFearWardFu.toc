@@ -1,23 +1,24 @@
-## Interface: 20100
+## Interface: 20300
 ## Title: FuBar - |cffffffffCheckFearWard|r|cff00ff00Fu|r
 ## Notes: Tracks the current Fear Ward's in the raid or party.
-## Author: CheckSoulstonesFu by lilcure - modified to CheckFearWardFu by Networkerror
-## X-eMail: lilcure@gmail.com - evonder@omnesia.net
-## X-Website: http://lilcure.wowinterface.com - http://theunboundguild.com
+## Author: Networkerror
+## Inspired By: lilcure(lilcure@gmail.com)
+## X-eMail: evonder@omnesia.net
+## X-Website: 
 ## X-Category: Buffs
+## Version: 2.1
+## X-Revision: $Rev$
+## X-Date: $Date$
+
+## X-Embeds: AceLibrary, AceAddon-2.0, AceConsole-2.0, AceDB-2.0, AceEvent-2.0, AceHook-2.1, AceLocale-2.2, FubarPlugin-2.0, Dewdrop-2.0, Tablet-2.0
 ## Dependencies: FuBar
 ## SavedVariables: CheckFearWardFuDB
-## Version: 2.0
-## LoadOnDemand: 1
-libs\AceLibrary\AceLibrary.lua
-libs\AceAddon-2.0\AceAddon-2.0.lua
-libs\AceConsole-2.0\AceConsole-2.0.lua
-libs\AceDB-2.0\AceDB-2.0.lua
-libs\AceEvent-2.0\AceEvent-2.0.lua
-libs\AceHook-2.0\AceHook-2.1.lua
-libs\AceLocale-2.2\AceLocale-2.2.lua
-libs\FuBarPlugin-2.0\FuBarPlugin-2.0.lua
-libs\Dewdrop-2.0\Dewdrop-2.0.lua
-libs\Tablet-2.0\Tablet-2.0.lua
+
+## LoadManagers: AddonLoader
+## X-LoadOn-Group: true
+
+embeds.xml
+
 CheckFearWardFuLocals-enUS.lua
+CheckFearWardFuLocals-deDE.lua
 CheckFearWardFu.lua

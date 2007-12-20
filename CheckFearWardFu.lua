@@ -6,8 +6,10 @@ local dewdrop = AceLibrary("Dewdrop-2.0")
 
 CheckFearWardFu.hasIcon = "Interface\\AddOns\\" .. CheckFearWardFu.folderName .. "\\icon"
 CheckFearWardFu.defaultPosition = "LEFT"
-
+CheckFearWardFu.hasNoColor = false
+CheckFearWardFu.hasNoColor = true
 CheckFearWardFu:RegisterDB("CheckFearWardFuDB")
+
 local options = {
     type='group',
     args = {
@@ -132,7 +134,7 @@ end
 function CheckFearWardFu:OnEnable()
 	self.members = {}
 	self.current_high = 0
-	self.current_low = 999999999999
+	self.current_low = 180
 	self.CHKWARD_TOTAL_WARDED = 0
 	self.INRAID = 0;
 	self.INGROUP = 0;
@@ -143,10 +145,10 @@ end
 CheckFearWardFu.OnMenuRequest = options
 function CheckFearWardFu:announce_lost_buff(unit)
 	if(CheckFearWardFu.db.profile.DCF == true) then
-		DEFAULT_CHAT_FRAME:AddMessage("*** "..UnitName(unit).." has lost their FEARWARD! ***", 1, 1, 1, 1, 5)
+		DEFAULT_CHAT_FRAME:AddMessage("*** "..UnitName(unit).." has lost their FEARWARD! ***", 1.0, 0.0, 0.0, 0.0, 53, 5.0)
         end
 	if(CheckFearWardFu.db.profile.CTRA == true) then
-		RaidWarningFrame:AddMessage("*** "..UnitName(unit).." has lost their FEARWARD! ***", 1, 1, 1, 1, 5)
+		RaidNotice_AddMessage(RaidBossEmoteFrame,"*** "..UnitName(unit).." has lost their FEARWARD! ***", ChatTypeInfo["RAID_WARNING"])
         end
         if(CheckFearWardFu.db.profile.audible == true) then
                 PlaySoundFile("Interface\\AddOns\\" .. CheckFearWardFu.folderName .. "\\Alert5.wav")
@@ -157,7 +159,7 @@ function CheckFearWardFu:OnDataUpdate()
 	local numraid = GetNumRaidMembers()
 	local numparty = GetNumPartyMembers()
 	self.current_high = 0
-	self.current_low = 999999999999
+	self.current_low = 180
 	self.CHKWARD_TOTAL_WARDED = 0
 	if(numraid > 1) then
 		self.INRAID = 1;
@@ -283,7 +285,7 @@ end
 
 function CheckFearWardFu:calculate_time_left(recorded_time)
 	local elapsed_seconds = time() - recorded_time
-	local total_seconds = 600 - elapsed_seconds
+	local total_seconds = 180 - elapsed_seconds
 	local leftover_seconds = mod(total_seconds,60)
 	local total_minutes = (total_seconds - leftover_seconds) / 60
 	local seconds_string = ""
