@@ -1,0 +1,21 @@
+## Interface: 30000
+## Title: FuBar - |cffffffffCheckFearWard|r|cff00ff00Fu|r 3.0
+## Notes: Tracks the current Fear Ward's in the raid or party.
+## Author: Networkerror
+## Inspired By: lilcure(lilcure@gmail.com)
+## X-eMail: evonder@omnesia.net
+## X-Website: 
+## X-Category: Buffs
+## Version: 3.0
+
+## Dependencies: FuBar
+## OptionalDeps: LibRock-1.0
+## X-Embeds: LibRock-1.0, LibRockDB-1.0, LibRockTimer-1.0, LibRockLocale-1.0, LibFuBarPlugin-3.0, Ace2, TabletLib
+## SavedVariables: CheckFearWardFu3DB
+
+embeds.xml
+
+CheckFearWardFu3Locals-enUS.lua
+CheckFearWardFu3Locals-deDE.lua
+
+CheckFearWardFu3.lua
