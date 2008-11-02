@@ -3,7 +3,7 @@ local Tablet = AceLibrary("Tablet-2.0")
 
 CheckFearWardFu3 = Rock:NewAddon("CheckFearWardFu3", "LibFuBarPlugin-3.0", "LibRockTimer-1.0", "LibRockDB-1.0", "LibRockConfig-1.0", "LibRockEvent-1.0", "LibRockHook-1.0")
 
-CheckFearWardFu3.version = "3.0" .. string.sub("$Revision: 003 $", 12, -3)
+CheckFearWardFu3.version = "3.0" .. string.sub("$Revision: 051 $", 12, -3)
 CheckFearWardFu3.date = string.sub("$Date: 2008-11-01 06:25:00 -0800 (Sat, 01 Nov 2008) $", 8, 17)
 CheckFearWardFu3:SetFuBarOption('hasIcon', true)
 CheckFearWardFu3:SetFuBarOption('hasNoColor', true)
@@ -30,7 +30,6 @@ end
 function CheckFearWardFu3:ToggleShowHighTime()
 	self.db.profile.showHighTime = not self.db.profile.showHighTime
 	self:UpdateFuBarPlugin()
-	--return self.db.profile.showHighTime
 end
 
 function CheckFearWardFu3:IsShowLowTime()
@@ -40,7 +39,6 @@ end
 function CheckFearWardFu3:ToggleShowLowTime()
 	self.db.profile.showLowTime = not self.db.profile.showLowTime
 	self:UpdateFuBarPlugin()
-	--return self.db.profile.showLowTime
 end
 
 function CheckFearWardFu3:IsDebug()
@@ -50,7 +48,6 @@ end
 function CheckFearWardFu3:ToggleDebug()
 	self.db.profile.debug = not self.db.profile.debug
 	self:UpdateFuBarPlugin()
-	--return self.db.profile.debug
 end
 
 function CheckFearWardFu3:IsDCF()
@@ -60,7 +57,6 @@ end
 function CheckFearWardFu3:ToggleDCF()
 	self.db.profile.dcf = not self.db.profile.dcf
 	self:UpdateFuBarPlugin()
-	--return self.db.profile.dcf
 end
 
 function CheckFearWardFu3:IsCTRA()
@@ -70,7 +66,6 @@ end
 function CheckFearWardFu3:ToggleCTRA()
 	self.db.profile.ctra = not self.db.profile.ctra
 	self:UpdateFuBarPlugin()
-	--return self.db.profile.ctra
 end
 
 function CheckFearWardFu3:IsAudible()
@@ -80,7 +75,6 @@ end
 function CheckFearWardFu3:ToggleAudible()
 	self.db.profile.audible = not self.db.profile.audible
 	self:UpdateFuBarPlugin()
-	--return self.db.profile.audible
 end
 
 function CheckFearWardFu3:OnInitialize()
@@ -110,6 +104,7 @@ local optionsTable = {
 				desc = L["debugD"],
 				get = "IsDebug",
 				set = "ToggleDebug",
+				hidden = true,
 			},
 			statusNotification = {
 				type = 'group',
@@ -184,10 +179,6 @@ function CheckFearWardFu3:OnDataUpdate()
 		end
 		self.inRaid = 0;
 		self.inGroup = 0;
-		--Debug
-		if self:IsDebug() then
-			--DEFAULT_CHAT_FRAME:AddMessage("Debug: Not In Group", 1.0, 0.0, 0.0, 0.0, 53, 5.0)
-		end
 	end
 	if(self.inRaid == 1) then
 		for i=1, numraid do
