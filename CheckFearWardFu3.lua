@@ -3,8 +3,8 @@ local Tablet = AceLibrary("Tablet-2.0")
 
 CheckFearWardFu3 = Rock:NewAddon("CheckFearWardFu3", "LibFuBarPlugin-3.0", "LibRockTimer-1.0", "LibRockDB-1.0", "LibRockConfig-1.0", "LibRockEvent-1.0", "LibRockHook-1.0")
 
-CheckFearWardFu3.version = "3.0" .. string.sub("$Revision: 002 $", 12, -3)
-CheckFearWardFu3.date = string.sub("$Date: 2008-09-08 12:00:00 -0800 (Wed, 08 Oct 2008) $", 8, 17)
+CheckFearWardFu3.version = "3.0" .. string.sub("$Revision: 003 $", 12, -3)
+CheckFearWardFu3.date = string.sub("$Date: 2008-11-01 06:25:00 -0800 (Sat, 01 Nov 2008) $", 8, 17)
 CheckFearWardFu3:SetFuBarOption('hasIcon', true)
 CheckFearWardFu3:SetFuBarOption('hasNoColor', true)
 CheckFearWardFu3:SetFuBarOption('detachedTooltip', false)
@@ -20,7 +20,68 @@ CheckFearWardFu3:SetDatabaseDefaults('profile', {
 	dcf = false,
 	ctra = false,
 	audible = false,
+	debug = false,
 })
+
+function CheckFearWardFu3:IsShowHighTime()
+	return self.db.profile.showHighTime
+end
+
+function CheckFearWardFu3:ToggleShowHighTime()
+	self.db.profile.showHighTime = not self.db.profile.showHighTime
+	self:UpdateFuBarPlugin()
+	--return self.db.profile.showHighTime
+end
+
+function CheckFearWardFu3:IsShowLowTime()
+	return self.db.profile.showLowTime
+end
+
+function CheckFearWardFu3:ToggleShowLowTime()
+	self.db.profile.showLowTime = not self.db.profile.showLowTime
+	self:UpdateFuBarPlugin()
+	--return self.db.profile.showLowTime
+end
+
+function CheckFearWardFu3:IsDebug()
+	return self.db.profile.debug
+end
+
+function CheckFearWardFu3:ToggleDebug()
+	self.db.profile.debug = not self.db.profile.debug
+	self:UpdateFuBarPlugin()
+	--return self.db.profile.debug
+end
+
+function CheckFearWardFu3:IsDCF()
+	return self.db.profile.dcf
+end
+
+function CheckFearWardFu3:ToggleDCF()
+	self.db.profile.dcf = not self.db.profile.dcf
+	self:UpdateFuBarPlugin()
+	--return self.db.profile.dcf
+end
+
+function CheckFearWardFu3:IsCTRA()
+	return self.db.profile.ctra
+end
+
+function CheckFearWardFu3:ToggleCTRA()
+	self.db.profile.ctra = not self.db.profile.ctra
+	self:UpdateFuBarPlugin()
+	--return self.db.profile.ctra
+end
+
+function CheckFearWardFu3:IsAudible()
+	return self.db.profile.audible
+end
+
+function CheckFearWardFu3:ToggleAudible()
+	self.db.profile.audible = not self.db.profile.audible
+	self:UpdateFuBarPlugin()
+	--return self.db.profile.audible
+end
 
 function CheckFearWardFu3:OnInitialize()
 local optionsTable = {
@@ -31,41 +92,48 @@ local optionsTable = {
     args = {
 			showHighTime = {
 				type = 'toggle',
-				name = L["Show high time"],
-				desc = L["Show high time in FuBar text"],
+				name = L["SHT"],
+				desc = L["SHTD"],
 				get = "IsShowHighTime",
 				set = "ToggleShowHighTime",
 			},
 			showLowTime = {
 				type = 'toggle',
-				name = L["Show low time"],
-				desc = L["Show low time in FuBar text"],
+				name = L["SLT"],
+				desc = L["SLTD"],
 				get = "IsShowLowTime",
 				set = "ToggleShowLowTime",
 			},
+			debug = {
+				type = 'toggle',
+				name = L["debug"],
+				desc = L["debugD"],
+				get = "IsDebug",
+				set = "ToggleDebug",
+			},
 			statusNotification = {
 				type = 'group',
-				name = L["Status Notification"],
-				desc = L["Where to show Fear Wards status notifications"],
+				name = L["SN"],
+				desc = L["SND"],
 				args = {
 					dcf = {
 						type = 'toggle',
-						name = L["Warn in Chat Window"],
-			      desc = L["Warn in Blizzard default chat window"],
+						name = L["DCF"],
+			      desc = L["DCFD"],
 			      get = "IsDCF",
 			      set = "ToggleDCF",
 					},
           ctra = {
 						type = 'toggle',
-						name = L["Warn in CT_RA Style"],
-			      desc = L["Warn in CT_RA raid warning style"],
+						name = L["CTRA"],
+			      desc = L["CTRAD"],
 			      get = "IsCTRA",
 			      set = "ToggleCTRA",
 					},
           audible = {
 						type = 'toggle',
-			      name = L["Audible Warning"],
-			      desc = L["Enable Audible Warning on loss of Fear Ward"],
+			      name = L["AUD"],
+			      desc = L["AUDD"],
 			      get = "IsAudible",
 			      set = "ToggleAudible",
 					},
@@ -90,59 +158,9 @@ function CheckFearWardFu3:OnEnable()
 end
 
 function CheckFearWardFu3:FubarUpdates()
+	self:UpdateFuBarPlugin()
 	self:AddRepeatingTimer(1, "UpdateFuBarPlugin")
 	self:AddRepeatingTimer(1, "OnDataUpdate")
-	self:AddRepeatingTimer(1, "OnUpdateFuBarText")
-end
-
-function CheckFearWardFu3:IsShowHighTime()
-	return self.db.profile.showHighTime
-end
-
-function CheckFearWardFu3:ToggleShowHighTime()
-	self.db.profile.showHighTime = not self.db.profile.showHighTime
-	self:UpdateFuBarPlugin()
-	return self.db.profile.showHighTime
-end
-
-function CheckFearWardFu3:IsShowLowTime()
-	return self.db.profile.showLowTime
-end
-
-function CheckFearWardFu3:ToggleShowLowTime()
-	self.db.profile.showLowTime = not self.db.profile.showLowTime
-	self:UpdateFuBarPlugin()
-	return self.db.profile.showLowTime
-end
-
-function CheckFearWardFu3:IsDCF()
-	return self.db.profile.dcf
-end
-
-function CheckFearWardFu3:ToggleDCF()
-	self.db.profile.dcf = not self.db.profile.dcf
-	self:UpdateFuBarPlugin()
-	return self.db.profile.dcf
-end
-
-function CheckFearWardFu3:IsCTRA()
-	return self.db.profile.ctra
-end
-
-function CheckFearWardFu3:ToggleCTRA()
-	self.db.profile.ctra = not self.db.profile.ctra
-	self:UpdateFuBarPlugin()
-	return self.db.profile.ctra
-end
-
-function CheckFearWardFu3:IsAudible()
-	return self.db.profile.audible
-end
-
-function CheckFearWardFu3:ToggleAudible()
-	self.db.profile.audible = not self.db.profile.audible
-	self:UpdateFuBarPlugin()
-	return self.db.profile.audible
 end
 
 function CheckFearWardFu3:OnDataUpdate()
@@ -166,8 +184,12 @@ function CheckFearWardFu3:OnDataUpdate()
 		end
 		self.inRaid = 0;
 		self.inGroup = 0;
+		--Debug
+		if self:IsDebug() then
+			--DEFAULT_CHAT_FRAME:AddMessage("Debug: Not In Group", 1.0, 0.0, 0.0, 0.0, 53, 5.0)
+		end
 	end
-	if(self.inGroup == 1) then
+	if(self.inRaid == 1) then
 		for i=1, numraid do
 			local member_unit = "raid"..i;
 			self:CheckStatus(member_unit);
@@ -192,7 +214,9 @@ function CheckFearWardFu3:CheckStatus(unit)
 	if(UnitName(unit) ~= nil) then
 		if(buffFound == 1) then
 			-- Debug
-			--DEFAULT_CHAT_FRAME:AddMessage("CheckStatus() Debug", 1.0, 0.0, 0.0, 0.0, 53, 5.0)
+			if self:IsDebug() then
+				DEFAULT_CHAT_FRAME:AddMessage("Debug: CheckStatus()", 1.0, 0.0, 0.0, 0.0, 53, 5.0)
+			end
 			if(members[UnitName(unit)] == nil) then
 				if(self.initialscan == 0) then
 					members[UnitName(unit)] = time();
@@ -246,7 +270,9 @@ function CheckFearWardFu3:CheckBuffPresent(unit)
 	while (UnitBuff(unit, buffIttr)) do
 		if (string.find(UnitBuff(unit,buffIttr), self.buffSearchString)) then
 			-- Debug
-			--DEFAULT_CHAT_FRAME:AddMessage("Debug " .. self:IsDCF(), 1.0, 0.0, 0.0, 0.0, 53, 5.0)
+			if self:IsDebug() then
+				DEFAULT_CHAT_FRAME:AddMessage("Debug: CheckBuffPresent()", 1.0, 0.0, 0.0, 0.0, 53, 5.0)
+			end
 			buffFound = 1			
 		end
 			buffIttr = buffIttr + 1
@@ -278,13 +304,13 @@ end
 function CheckFearWardFu3:OnUpdateFuBarTooltip()
 	local cat = Tablet:AddCategory(
 		'columns', 2,
-		'child_textR', 0,
+		'child_textR', 1,
 		'child_textG', 1,
 		'child_textB', 0,
 		'child_text2R', 1,
 		'child_text2G', 1,
 		'child_text2B', 1
-		)
+	)
 	if(members == nil) then
 		members = {};
 	end
@@ -307,7 +333,7 @@ function CheckFearWardFu3:OnUpdateFuBarTooltip()
 	end		
 	if linesAdded == false then
 		cat:AddLine(
-			'text', L["No Fear Wards"]
+			'text', L["BUFF"]
 			)
 	end
 end

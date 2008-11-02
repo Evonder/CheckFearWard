@@ -1,7 +1,7 @@
 ## Interface: 30000
 ## Title: FuBar - |cffffffffCheckFearWard|r|cff00ff00Fu|r 3.0
 ## Notes: Tracks the current Fear Ward's in the raid or party.
-## Author: Networkerror
+## Author: Evonder
 ## Inspired By: lilcure(lilcure@gmail.com)
 ## X-eMail: evonder@omnesia.net
 ## X-Website: 
