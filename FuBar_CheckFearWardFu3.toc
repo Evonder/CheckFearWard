@@ -10,7 +10,7 @@
 
 ## Dependencies: FuBar
 ## OptionalDeps: LibRock-1.0
-## X-Embeds: LibRock-1.0, LibRockDB-1.0, LibRockTimer-1.0, LibRockLocale-1.0, LibFuBarPlugin-3.0, Ace2, TabletLib
+## X-Embeds: LibRock-1.0, LibRockDB-1.0, LibRockTimer-1.0, LibRockLocale-1.0, LibRockEvent-1.0, LibRockHook-1.0, LibFuBarPlugin-3.0, Ace2, TabletLib
 ## SavedVariables: CheckFearWardFu3DB
 
 embeds.xml

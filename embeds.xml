@@ -5,8 +5,8 @@
 <Include file="libs\LibRockTimer-1.0\lib.xml"/>
 <Include file="libs\LibRockDB-1.0\lib.xml"/>
 <Include file="libs\LibRockLocale-1.0\lib.xml"/>
-<Include file="libs\LibRockEvent-1.0-1.0\lib.xml"/>
-<Include file="libs\LibRockHook-1.0-1.0\lib.xml"/>
+<Include file="libs\LibRockEvent-1.0\lib.xml"/>
+<Include file="libs\LibRockHook-1.0\lib.xml"/>
 <Include file="libs\LibFuBarPlugin-3.0\lib.xml"/>
 <Script file="libs\AceLibrary\AceLibrary.lua"/>
 <Script file="libs\Tablet-2.0\Tablet-2.0.lua"/>
