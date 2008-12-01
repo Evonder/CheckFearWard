@@ -3,7 +3,7 @@ local Tablet = AceLibrary("Tablet-2.0")
 
 CheckFearWardFu3 = Rock:NewAddon("CheckFearWardFu3", "LibFuBarPlugin-3.0", "LibRockTimer-1.0", "LibRockDB-1.0", "LibRockConfig-1.0", "LibRockEvent-1.0", "LibRockHook-1.0")
 
-CheckFearWardFu3.version = "3.0" .. string.sub("$Revision: 053 $", 12, -3)
+CheckFearWardFu3.version = "3.0" .. string.sub("$Revision: 054 $", 12, -3)
 CheckFearWardFu3.date = string.sub("$Date: 2008-11-25 00:00:00 -0800 (Tue, 25 Nov 2008) $", 8, 17)
 CheckFearWardFu3:SetFuBarOption('hasIcon', true)
 CheckFearWardFu3:SetFuBarOption('hasNoColor', true)

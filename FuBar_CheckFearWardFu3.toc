@@ -16,6 +16,5 @@
 embeds.xml
 
 CheckFearWardFu3Locals-enUS.lua
-CheckFearWardFu3Locals-deDE.lua
 
 CheckFearWardFu3.lua
