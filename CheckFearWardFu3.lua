@@ -41,7 +41,6 @@ local MAJOR_VERSION = "3.0"
 local MINOR_VERSION = 000 + tonumber(("$Revision: @project-revision@ $"):match("%d+"))
 CheckFearWardFu3.version = MAJOR_VERSION .. "." .. MINOR_VERSION
 CheckFearWardFu3.date = string.sub("Date: @file-date-iso@", 1, 10)
-CheckFearWardFu3.date2 = string.sub("$ $Date$ $", 8, 17)
 
 CheckFearWardFu3:SetFuBarOption('hasIcon', true)
 CheckFearWardFu3:SetFuBarOption('hasNoColor', true)
