@@ -1,3 +1,9 @@
+--[[
+File Author: @file-author@
+File Revision: @file-revision@
+File Date: @file-date-iso@
+]]--
+
 local L = Rock("LibRockLocale-1.0"):GetTranslationNamespace("FuBar_CheckFearWardFu3")
 L:AddTranslations("enUS", function() return {
 	["SHT"] = "Show high time",
