@@ -30,7 +30,7 @@ Libs\Tablet-2.0\Tablet-2.0.lua
 #@end-no-lib-strip@
 
 ## Locale ##
-CheckFearWardFu3Locals-enUS.lua
+CheckFearWardFu3Locals.lua
 
 ## Core ##
 CheckFearWardFu3.lua
