@@ -1,4 +1,4 @@
-## Interface: 30000
+## Interface: 30100
 ## Title: FuBar - |cffffffffCheckFearWard|r|cff00ff00Fu|r 3.0
 ## Notes: Tracks the current Fear Ward's in the raid or party.
 ## Author: @project-author@
@@ -29,8 +29,8 @@ Libs\AceLibrary\AceLibrary.lua
 Libs\Tablet-2.0\Tablet-2.0.lua
 #@end-no-lib-strip@
 
-## Core ##
-CheckFearWardFu3.lua
-
 ## Locale ##
 CheckFearWardFu3Locals-enUS.lua
+
+## Core ##
+CheckFearWardFu3.lua

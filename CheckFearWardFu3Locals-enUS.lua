@@ -10,7 +10,7 @@ L:AddTranslations("enUS", function() return {
 	["SHTD"] = "Show high time in FuBar text",
 	["SLT"] = "Show low time",
 	["SLTD"] = "Show low time in FuBar text",
-	["debug"] = "Enable Debugging",
+	["debug"] = "Debugging",
 	["debugD"] = "Enable Debugging",
 	["SN"] = "Status Notification",
 	["SND"] = "Where to show Fear Wards status notifications",
