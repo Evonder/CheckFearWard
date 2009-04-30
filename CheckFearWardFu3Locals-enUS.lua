@@ -3,6 +3,10 @@ File Author: @file-author@
 File Revision: @file-revision@
 File Date: @file-date-iso@
 ]]--
+local debug = false
+--@debug@
+debug = true
+--@end-debug@
 
 local L = Rock("LibRockLocale-1.0"):GetTranslationNamespace("FuBar_CheckFearWardFu3")
 L:AddTranslations("enUS", function() return {
@@ -22,3 +26,5 @@ L:AddTranslations("enUS", function() return {
 	["AUDD"] = "Enable Audible Warning on loss of Fear Ward",
 	["BUFF"] = "No Fear Wards",
 } end)
+
+--@localization(locale="enUS", format="lua_additive_table", same-key-is-true=true, handle-subnamespaces="concat")@
