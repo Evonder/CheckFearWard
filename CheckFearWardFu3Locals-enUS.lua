@@ -9,7 +9,10 @@ debug = true
 --@end-debug@
 
 local L = Rock("LibRockLocale-1.0"):GetTranslationNamespace("FuBar_CheckFearWardFu3")
-L:AddTranslations("enUS", function() return 
+L:AddTranslations("enUS", function() return
 --@localization(locale="enUS", format="lua_table", same-key-is-true=true, handle-subnamespaces="concat")@
- end)
+end)
 
+L:AddTranslations("deDE", function() return
+--@localization(locale="deDE", format="lua_table", same-key-is-true=true, handle-subnamespaces="concat")@
+end)
