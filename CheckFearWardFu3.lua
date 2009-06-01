@@ -52,6 +52,8 @@ CheckFearWardFu3:SetFuBarOption('clickableTooltip', true)
 
 CheckFearWardFu3:SetDatabase("CheckFearWardFu3DB")
 CheckFearWardFu3:SetDatabaseDefaults('profile', {
+	showIcon = true,
+	showText =  true,
 	showHighTime = false,
 	showLowTime = false,
 	dcf = false,
@@ -87,6 +89,42 @@ function CheckFearWardFu3:ToggleDebug()
 	self:UpdateFuBarPlugin()
 end
 
+function CheckFearWardFu3:IsBRD()
+	return self.db.profile.brd
+end
+
+function CheckFearWardFu3:ToggleBRD()
+	self.db.profile.brd = not self.db.profile.brd
+	self:UpdateFuBarPlugin()
+end
+
+function CheckFearWardFu3:IsBS()
+	return self.db.profile.bs
+end
+
+function CheckFearWardFu3:ToggleBS()
+	self.db.profile.bs = not self.db.profile.bs
+	self:UpdateFuBarPlugin()
+end
+
+function CheckFearWardFu3:IsBP()
+	return self.db.profile.bp
+end
+
+function CheckFearWardFu3:ToggleBP()
+	self.db.profile.bp = not self.db.profile.bp
+	self:UpdateFuBarPlugin()
+end
+
+function CheckFearWardFu3:IsBR()
+	return self.db.profile.br
+end
+
+function CheckFearWardFu3:ToggleBR()
+	self.db.profile.br = not self.db.profile.br
+	self:UpdateFuBarPlugin()
+end
+
 function CheckFearWardFu3:IsDCF()
 	return self.db.profile.dcf
 end
@@ -114,13 +152,21 @@ function CheckFearWardFu3:ToggleAudible()
 	self:UpdateFuBarPlugin()
 end
 
+function CheckFearWardFu3:PostEnable()
+	print("|cFF33FF99CheckFearWardFu3|r: " .. CheckFearWardFu3.version .. " |cff00ff00Enabled|r")
+end
+
+function CheckFearWardFu3:OnDisable()
+	print("|cFF33FF99CheckFearWardFu3|r: " .. CheckFearWardFu3.version .. " |cffff8080Disabled|r")
+end
+
 function CheckFearWardFu3:OnInitialize()
 local optionsTable = {
 		name = "FuBar_CheckFearWardFu3",
 		desc = self.notes,
 		handler = CheckFearWardFu3,
-    type='group',
-    args = {
+		type='group',
+		args = {
 			showHighTime = {
 				type = 'toggle',
 				name = L["SHT"],
@@ -141,33 +187,81 @@ local optionsTable = {
 				desc = L["debugD"],
 				get = "IsDebug",
 				set = "ToggleDebug",
-				hidden = true,
+				hidden = false,
 			},
 			statusNotification = {
 				type = 'group',
 				name = L["SN"],
 				desc = L["SND"],
 				args = {
+					broadcast = {
+						type = 'group',
+						name = L["BRODG"],
+						desc = L["BRODD"],
+						args = {
+							broadcast = {
+								type = 'toggle',
+								order = 1,
+								name = L["BROD"],
+								desc = L["BRODD"],
+								get = "IsBRD",
+								set = "ToggleBRD",
+							},
+							chat = {
+								type = 'toggle',
+								order = 2,
+								disabled = function()
+									return not CheckFearWardFu3:IsBRD()
+								end,
+								name = L["BS"],
+								desc = L["BSD"],
+								get = "IsBS",
+								set = "ToggleBS",
+							},
+							party = {
+								type = 'toggle',
+								order = 3,
+								disabled = function()
+									return not CheckFearWardFu3:IsBRD()
+								end,
+								name = L["BP"],
+								desc = L["BPD"],
+								get = "IsBP",
+								set = "ToggleBP",
+							},
+							raid = {
+								type = 'toggle',
+								order = 4,
+								disabled = function()
+									return not CheckFearWardFu3:IsBRD()
+								end,
+								name = L["BR"],
+								desc = L["BRD"],
+								get = "IsBR",
+								set = "ToggleBR",
+							},
+						},
+					},
 					dcf = {
 						type = 'toggle',
 						name = L["DCF"],
-			      desc = L["DCFD"],
-			      get = "IsDCF",
-			      set = "ToggleDCF",
+						desc = L["DCFD"],
+						get = "IsDCF",
+						set = "ToggleDCF",
 					},
-          ctra = {
+					ctra = {
 						type = 'toggle',
 						name = L["CTRA"],
-			      desc = L["CTRAD"],
-			      get = "IsCTRA",
-			      set = "ToggleCTRA",
+						desc = L["CTRAD"],
+						get = "IsCTRA",
+						set = "ToggleCTRA",
 					},
-          audible = {
+					audible = {
 						type = 'toggle',
-			      name = L["AUD"],
-			      desc = L["AUDD"],
-			      get = "IsAudible",
-			      set = "ToggleAudible",
+						name = L["AUD"],
+						desc = L["AUDD"],
+						get = "IsAudible",
+						set = "ToggleAudible",
 					},
 				}
 			},
@@ -187,6 +281,7 @@ function CheckFearWardFu3:OnEnable()
 	self.inRaid = 0
 	self.initialscan = 1
 	self:FubarUpdates()
+	CheckFearWardFu3:AddTimer(0, "PostEnable")
 end
 
 function CheckFearWardFu3:FubarUpdates()
@@ -201,10 +296,10 @@ function CheckFearWardFu3:OnDataUpdate()
 	self.currentHigh = 0
 	self.currentLow = 180
 	self.checkTotalWarded = 0
-	if(numraid > 1) then
+	if(numraid >= 1) then
 		self.inRaid = 1;
 		self.inGroup = 0;
-	elseif(numparty > 1) then
+	elseif(numparty >= 1) then
 		if(self.inRaid == 1) then
 			self.members = {};
 		end
@@ -236,6 +331,7 @@ end
 
 function CheckFearWardFu3:CheckStatus(unit)
 	local buffFound = CheckFearWardFu3:CheckBuffPresent(unit);
+	local msg = "*** "..UnitName(unit).." has lost their "..self.buffSearchString.."! ***"
 	if(members == nil) then
 		members = {};
 	end
@@ -264,7 +360,7 @@ function CheckFearWardFu3:CheckStatus(unit)
 			if(members[UnitName(unit)] == nil) then
 				members[UnitName(unit)] = 0;
 			elseif(members[UnitName(unit)] ~= 0) then
-				CheckFearWardFu3:AnnounceLostBuff(unit);
+				CheckFearWardFu3:AnnounceLostBuff(msg, unit);
 				members[UnitName(unit)] = 0;
 			end
 		end
@@ -280,18 +376,41 @@ function CheckFearWardFu3:CheckStatus(unit)
 		end
 end
 
-function CheckFearWardFu3:AnnounceLostBuff(unit)
+function CheckFearWardFu3:OnFuBarClick(button)
+	if(members == nil) then
+		members = {};
+	end
+	for k in pairs(members) do
+		if(members[k] ~= 0) then
+			msg = self.buffSearchString.." ["..UnitName("player").."]: "..CheckFearWardFu3:CalculateTimeLeft(members[k])
+			CheckFearWardFu3:AnnounceLostBuff(msg, unit)
+		end
+	end
+end
+
+function CheckFearWardFu3:AnnounceLostBuff(msg, unit)
+	local numraid = GetNumRaidMembers()
+	local numparty = GetNumPartyMembers()
 	if (self:IsDCF()) then
-		DEFAULT_CHAT_FRAME:AddMessage("*** "..UnitName(unit).." has lost their FEARWARD! ***", 1.0, 0.0, 0.0, 0.0, 53, 5.0)
+		DEFAULT_CHAT_FRAME:AddMessage(msg, 1.0, 0.0, 0.0, 0.0, 53, 5.0)
 	end
 	if (self:IsCTRA()) then
-		RaidNotice_AddMessage(RaidBossEmoteFrame,"*** "..UnitName(unit).." has lost their FEARWARD! ***", ChatTypeInfo["RAID_WARNING"])
+		RaidNotice_AddMessage(RaidBossEmoteFrame,msg , ChatTypeInfo["RAID_WARNING"])
 	end
 	if (self:IsAudible()) then
 		PlaySoundFile("Interface\\AddOns\\FuBar_CheckFearWardFu3\\Alert.wav")
 	end
+	if (self:IsBRD() and self:IsBS()) then
+		SendChatMessage(msg, "SAY", ChatFrameEditBox.language, "CHANNEL")
+	end
+	if (self:IsBRD() and self:IsBP() and numparty >= 1) then
+		SendChatMessage(msg, "PARTY", ChatFrameEditBox.language, "CHANNEL")
+	end
+	if (self:IsBRD() and self:IsBR() and numraid >= 1) then
+		SendChatMessage(msg, "RAID", ChatFrameEditBox.language, "CHANNEL")
+	end
 end
-		
+
 function CheckFearWardFu3:CheckBuffPresent(unit)
 	local buffFound = 0
 	local buffIttr = 1
@@ -301,16 +420,16 @@ function CheckFearWardFu3:CheckBuffPresent(unit)
 			if self:IsDebug() then
 				DEFAULT_CHAT_FRAME:AddMessage("Debug: CheckBuffPresent()", 1.0, 0.0, 0.0, 0.0, 53, 5.0)
 			end
-			buffFound = 1			
+			buffFound = 1
 		end
 			buffIttr = buffIttr + 1
 		end
-  return buffFound
+	return buffFound
 end
 
 function CheckFearWardFu3:OnUpdateFuBarText()
 	local str = "";
-	str = "Fear Ward's: " .. self.checkTotalWarded;
+	str = self.buffSearchString.." Buff: " .. self.checkTotalWarded;
 	if(self.currentHigh ~= 0) then
 		if(self:IsShowHighTime() and not self:IsShowLowTime()) then
 			local highMinutes = CheckFearWardFu3:CalculateTimeLeft(self.currentHigh)
@@ -354,14 +473,14 @@ function CheckFearWardFu3:OnUpdateFuBarTooltip()
 				cat:AddLine(
 					'text',k..": ",
 					'text2', CheckFearWardFu3:CalculateTimeLeft(members[k])
-					) 
+					)
 			end
 			linesAdded = true;
 		end
-	end		
+	end
 	if linesAdded == false then
 		cat:AddLine(
-			'text', L["BUFF"]
+			'text', "No "..self.buffSearchString.." Buff"
 			)
 	end
 end
@@ -386,5 +505,5 @@ function CheckFearWardFu3:CalculateTimeLeft(recordedTime)
 	else
 		minutesString = totalMinutes
 	end
-  return minutesString..":"..secondsString
+	return minutesString..":"..secondsString
 end

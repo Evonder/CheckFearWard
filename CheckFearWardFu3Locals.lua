@@ -16,3 +16,7 @@ end)
 L:AddTranslations("deDE", function() return
 --@localization(locale="deDE", format="lua_table", same-key-is-true=true, handle-subnamespaces="concat")@
 end)
+
+L:AddTranslations("zhTW", function() return
+--@localization(locale="zhTW", format="lua_table", same-key-is-true=true, handle-subnamespaces="concat")@
+end)
