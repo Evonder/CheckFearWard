@@ -161,116 +161,118 @@ function CFW3:OnDisable()
 	print("|cFF33FF99CheckFearWardFu3|r: " .. CheckFearWardFu3.version .. " |cffff8080Disabled|r")
 end
 
-function CFW3:OnInitialize()
 local optionsTable = {
-		name = "FuBar_CheckFearWardFu3",
-		desc = self.notes,
-		handler = CheckFearWardFu3,
-		type='group',
-		args = {
-			showHighTime = {
-				type = 'toggle',
-				name = L["SHT"],
-				desc = L["SHTD"],
-				get = "IsShowHighTime",
-				set = "ToggleShowHighTime",
-			},
-			showLowTime = {
-				type = 'toggle',
-				name = L["SLT"],
-				desc = L["SLTD"],
-				get = "IsShowLowTime",
-				set = "ToggleShowLowTime",
-			},
-			debug = {
-				type = 'toggle',
-				name = L["debug"],
-				desc = L["debugD"],
-				get = "IsDebug",
-				set = "ToggleDebug",
-				hidden = false,
-			},
-			statusNotification = {
-				type = 'group',
-				name = L["SN"],
-				desc = L["SND"],
-				args = {
-					broadcast = {
-						type = 'group',
-						name = L["BRODG"],
-						desc = L["BRODD"],
-						args = {
-							broadcast = {
-								type = 'toggle',
-								order = 1,
-								name = L["BROD"],
-								desc = L["BRODD"],
-								get = "IsBRD",
-								set = "ToggleBRD",
-							},
-							chat = {
-								type = 'toggle',
-								order = 2,
-								disabled = function()
-									return not CFW3:IsBRD()
-								end,
-								name = L["BS"],
-								desc = L["BSD"],
-								get = "IsBS",
-								set = "ToggleBS",
-							},
-							party = {
-								type = 'toggle',
-								order = 3,
-								disabled = function()
-									return not CFW3:IsBRD()
-								end,
-								name = L["BP"],
-								desc = L["BPD"],
-								get = "IsBP",
-								set = "ToggleBP",
-							},
-							raid = {
-								type = 'toggle',
-								order = 4,
-								disabled = function()
-									return not CFW3:IsBRD()
-								end,
-								name = L["BR"],
-								desc = L["BRD"],
-								get = "IsBR",
-								set = "ToggleBR",
-							},
+	name = "FuBar_CheckFearWardFu3",
+	desc = L["DESC"],
+	handler = CheckFearWardFu3,
+	type='group',
+	args = {
+		showHighTime = {
+			type = 'toggle',
+			name = L["SHT"],
+			desc = L["SHTD"],
+			get = "IsShowHighTime",
+			set = "ToggleShowHighTime",
+		},
+		showLowTime = {
+			type = 'toggle',
+			name = L["SLT"],
+			desc = L["SLTD"],
+			get = "IsShowLowTime",
+			set = "ToggleShowLowTime",
+		},
+		debug = {
+			type = 'toggle',
+			name = L["debug"],
+			desc = L["debugD"],
+			get = "IsDebug",
+			set = "ToggleDebug",
+			hidden = false,
+		},
+		statusNotification = {
+			type = 'group',
+			name = L["SN"],
+			desc = L["SND"],
+			args = {
+				broadcast = {
+					type = 'group',
+					name = L["BRODG"],
+					desc = L["BRODD"],
+					args = {
+						broadcast = {
+							type = 'toggle',
+							order = 1,
+							name = L["BROD"],
+							desc = L["BRODD"],
+							get = "IsBRD",
+							set = "ToggleBRD",
+						},
+						chat = {
+							type = 'toggle',
+							order = 2,
+							disabled = function()
+								return not CFW3:IsBRD()
+							end,
+							name = L["BS"],
+							desc = L["BSD"],
+							get = "IsBS",
+							set = "ToggleBS",
+						},
+						party = {
+							type = 'toggle',
+							order = 3,
+							disabled = function()
+								return not CFW3:IsBRD()
+							end,
+							name = L["BP"],
+							desc = L["BPD"],
+							get = "IsBP",
+							set = "ToggleBP",
+						},
+						raid = {
+							type = 'toggle',
+							order = 4,
+							disabled = function()
+								return not CFW3:IsBRD()
+							end,
+							name = L["BR"],
+							desc = L["BRD"],
+							get = "IsBR",
+							set = "ToggleBR",
 						},
 					},
-					dcf = {
-						type = 'toggle',
-						name = L["DCF"],
-						desc = L["DCFD"],
-						get = "IsDCF",
-						set = "ToggleDCF",
-					},
-					ctra = {
-						type = 'toggle',
-						name = L["CTRA"],
-						desc = L["CTRAD"],
-						get = "IsCTRA",
-						set = "ToggleCTRA",
-					},
-					audible = {
-						type = 'toggle',
-						name = L["AUD"],
-						desc = L["AUDD"],
-						get = "IsAudible",
-						set = "ToggleAudible",
-					},
-				}
-			},
+				},
+				dcf = {
+					type = 'toggle',
+					name = L["DCF"],
+					desc = L["DCFD"],
+					get = "IsDCF",
+					set = "ToggleDCF",
+				},
+				ctra = {
+					type = 'toggle',
+					name = L["CTRA"],
+					desc = L["CTRAD"],
+					get = "IsCTRA",
+					set = "ToggleCTRA",
+				},
+				audible = {
+					type = 'toggle',
+					name = L["AUD"],
+					desc = L["AUDD"],
+					get = "IsAudible",
+					set = "ToggleAudible",
+				},
+			}
 		},
-	}
+	},
+}
+
+function CFW3:OnInitialize()
 	self.buffSearchString = "Fear Ward"
 	CFW3:SetConfigTable(optionsTable)
-	CheckFearWardFu3.OnMenuRequest = optionsTable
+	CFW3:SetConfigSlashCommand("/CFW")
+	CFW3.OnMenuRequest = optionsTable
 end
 
 function CFW3:OnEnable()
