@@ -1,0 +1,4 @@
+-
+  type: creole
+  input-file: Docs/main.txt
+  output-page: "Main"
