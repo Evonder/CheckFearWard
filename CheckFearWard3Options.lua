@@ -1,4 +1,4 @@
---[[
+--[[ 
 File Author: @file-author@
 File Revision: @file-revision@
 File Date: @file-date-iso@
