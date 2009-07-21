@@ -85,7 +85,7 @@ function CFW3:OnInitialize()
 
 	local AC = LibStub("AceConsole-3.0")
 	AC:RegisterChatCommand("cfw", function() CFW3:OpenOptions() end)
-	AC:Print("CheckFearWard3 " .. MAJOR_VERSION .. "." .. MINOR_VERSION .. " Loaded!")
+	AC:Print("CheckFearWard3 " .. CheckFearWard3.version .. " Loaded!")
 
 	local ACR = LibStub("AceConfigRegistry-3.0")
 	ACR:RegisterOptionsTable("CheckFearWard3", options)
@@ -110,9 +110,6 @@ function CFW3:OpenOptions()
 end
 
 function CFW3:IsLoggedIn()
-	if LDB then
-		CFW3:InitLDB()
-	end
 	if LFBP then
 		CFW3:InitFubar()
 	end
@@ -276,80 +273,77 @@ end
 
 
 ]]--
-do
-	local function OnTooltipShow(self)
-		self:AddLine(L["CheckFearWard3"])
-		CFW3:AddLinesLDB(self)
-	end
+local function OnTooltipShow(self)
+	self:AddLine(L["CheckFearWard3"])
+	CFW3:AddLinesLDB(self)
+end
 	
-	local function OnEnter(self)
-		GameTooltip:SetOwner(self, "ANCHOR_NONE")
-		GameTooltip:SetPoint("TOPLEFT", self, "BOTTOMLEFT")
-		GameTooltip:ClearLines()
-		OnTooltipShow(GameTooltip)
-		GameTooltip:Show()
-	end
+local function OnEnter(self)
+	GameTooltip:SetOwner(self, "ANCHOR_NONE")
+	GameTooltip:SetPoint("TOPLEFT", self, "BOTTOMLEFT")
+	GameTooltip:ClearLines()
+	OnTooltipShow(GameTooltip)
+	GameTooltip:Show()
+end
 
-	local function OnLeave(self)
-		GameTooltip:Hide()
-	end
+local function OnLeave(self)
+	GameTooltip:Hide()
+end
 	
-	local function OnClick(clickedframe, button)
-		if (button == "RightButton") then
-			CFW3:OpenOptions()
-		else
-			CFW3:AnnounceOnClick()
-		end
+local function OnClick(clickedframe, button)
+	if (button == "RightButton") then
+		CFW3:OpenOptions()
+	else
+		CFW3:AnnounceOnClick()
 	end
+end
 	
-	function CFW3:AddLinesLDB(self)
-		if(members == nil) then
-			members = {};
-		end
-		local linesAdded = false
-		for k in pairs(members) do
-			if(members[k] ~= 0) then
-				if(members[k] == -1) then
-					line = self:AddLine(k .. ": " .. L["Unknown"])
-				else
-					line = self:AddLine(k .. ": " .. CFW3:CalculateTimeLeft(members[k]))
-				end
-				linesAdded = true;
-				return line
+function CFW3:AddLinesLDB(self)
+	if(members == nil) then
+		members = {};
+	end
+	local linesAdded = false
+	for k in pairs(members) do
+		if(members[k] ~= 0) then
+			if(members[k] == -1) then
+				line = self:AddLine(k .. ": " .. L["Unknown"])
+			else
+				line = self:AddLine(k .. ": " .. CFW3:CalculateTimeLeft(members[k]))
 			end
+			linesAdded = true;
+			return line
 		end
-		if linesAdded == false then
-			line = self:AddLine(L["No"] .. " "..buffSearchString.." " .. L["BUFF"])
-		end
-		return line
 	end
-	
-	function CFW3:InitLDB()
-		local CFW3LDB = {
-			type = "data source",
-			icon = "Interface\\AddOns\\CheckFearWard3\\icon",
-			label = "",
-			value = CFW3:OnUpdateText(),
-			OnClick = OnClick,
-			OnEnter = OnEnter,
-			OnLeave = OnLeave,
-			OnTooltipShow = OnTooltipShow,
-		}
-		ldbObj = LDB:NewDataObject(L["CheckFearWard3"], CFW3LDB)
+	if linesAdded == false then
+		line = self:AddLine(L["No"] .. " "..buffSearchString.." " .. L["BUFF"])
 	end
+	return line
+end
 	
-	local frame = CreateFrame("frame")
-	local delay, interval = 0.5, 0.5
-	frame:SetScript("OnUpdate", function(frame, elapsed)
-	delay = delay + elapsed
-		if delay > interval then
-			ldbObj.value = CFW3:OnUpdateText()
-			ldbObj.text = (ldbObj.label)..(ldbObj.value)
-			delay = 0
-		end
-	end)
+if LDB then	
+	local CFW3LDB = {
+		type = "data source",
+		icon = "Interface\\AddOns\\CheckFearWard3\\icon",
+		label = "",
+		value = OnUpdateText,
+		OnClick = OnClick,
+		OnEnter = OnEnter,
+		OnLeave = OnLeave,
+		OnTooltipShow = OnTooltipShow,
+	}
+	ldbObj = LDB:NewDataObject(L["CheckFearWard3"], CFW3LDB)
+end
 	
-end --do
+local frame = CreateFrame("frame")
+local delay, interval = 0.5, 0.5
+frame:SetScript("OnUpdate", function(frame, elapsed)
+delay = delay + elapsed
+	if delay > interval then
+		ldbObj.value = CFW3:OnUpdateText()
+		ldbObj.text = (ldbObj.label)..(ldbObj.value)
+		delay = 0
+	end
+end)
 	
 function CFW3:InitFubar()
 	-- Optional launcher support for LFBP-3.0 if present, this code is placed here so
