@@ -34,7 +34,6 @@ File Date: @file-date-iso@
 CheckFearWard3 = LibStub("AceAddon-3.0"):NewAddon("CheckFearWard3", "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0")
 local L =  LibStub("AceLocale-3.0"):GetLocale("CheckFearWard3", false)
 local LDB = LibStub("LibDataBroker-1.1", true)
-local LDBIcon = LDB and LibStub("LibDBIcon-1.0", true)
 local Tablet = AceLibrary("Tablet-2.0")
 local CFW3, self = CheckFearWard3, CheckFearWard3
 
@@ -114,7 +113,9 @@ function CFW3:IsLoggedIn()
 	if LDB then
 		CFW3:InitLDB()
 	end
-	CFW3:InitFubar()
+	if LFBP then
+		CFW3:InitFubar()
+	end
 	CFW3:ScheduleRepeatingTimer("OnDataUpdate", 0.5)
 --~ 	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", "CheckFearWard_CL")
 	self:UnregisterEvent("PLAYER_LOGIN")
@@ -335,15 +336,12 @@ do
 			OnTooltipShow = OnTooltipShow,
 		}
 		ldbObj = LDB:NewDataObject(L["CheckFearWard3"], CFW3LDB)
-		if LDBIcon and not IsAddOnLoaded("Broker2FuBar") and not IsAddOnLoaded("FuBar") then
-			LDBIcon:Register("CheckFearWard3", CFW3LDB, db.MinimapIcon)
-		end
 	end
 	
 	local frame = CreateFrame("frame")
 	local delay, interval = 0.5, 0.5
 	frame:SetScript("OnUpdate", function(frame, elapsed)
-		delay = delay + elapsed
+	delay = delay + elapsed
 		if delay > interval then
 			ldbObj.value = CFW3:OnUpdateText()
 			ldbObj.text = (ldbObj.label)..(ldbObj.value)
@@ -351,7 +349,7 @@ do
 		end
 	end)
 	
-end
+end --do
 	
 function CFW3:InitFubar()
 	-- Optional launcher support for LFBP-3.0 if present, this code is placed here so

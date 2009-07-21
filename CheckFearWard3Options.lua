@@ -3,261 +3,508 @@ File Author: @file-author@
 File Revision: @file-revision@
 File Date: @file-date-iso@
 ]]--
-local TradeFilter3 = LibStub("AceAddon-3.0"):GetAddon("CheckFearWard3")
-local L = LibStub("AceLocale-3.0"):GetLocale("CheckFearWard3")
-local CFW3, self = CheckFearWard3, CheckFearWard3
+local TradeFilter3 = LibStub("AceAddon-3.0"):GetAddon("TradeFilter3")
+local L = LibStub("AceLocale-3.0"):GetLocale("TradeFilter3")
+local TF3 = TradeFilter3
 
+--[[ Options Table ]]--
 options = {
-  name = CFW3.name,
-  desc = L["DESC"],
-  handler = CheckFearWard3,
-  type='group',
-  args = {
-    generalGroup = {
-      type = "group",
-      name = CFW3.name,
-      childGroups = 'tab',
-      args = {
-        turnOn = {
-          type = 'toggle',
-          order = 1,
-          width = "full",
-          name = L["TurnOn"],
-          desc = L["TurnOnDesc"],
-          get = function() return CFW3.db.profile.turnOn end,
-          set = function()
-            if (CFW3.db.profile.turnOn == false) then
-              print("|cFF33FF99CheckFearWard3|r: " .. CheckFearWard3.version .. " |cff00ff00Enabled|r")
-              CFW3.db.profile.turnOn = not CFW3.db.profile.turnOn
-            else
-              print("|cFF33FF99CheckFearWard3|r: " .. CheckFearWard3.version .. " |cffff8080Disabled|r")
-              CFW3.db.profile.turnOn = not CFW3.db.profile.turnOn
-            end
-          end,
-        },
-        debug = {
-          type = 'toggle',
-          order = 2,
-          width = "full",
-          name = L["debug"],
-          desc = L["debugD"],
-          get = function() return CFW3.db.profile.debug end,
-          set = function()
-            CFW3.db.profile.debug = not CFW3.db.profile.debug
-            CFW3:UpdateFuBarPlugin()
-          end,
-          hidden = function() return CFW3.db.profile.debug end,
-        },
-        statusNotification = {
-          type = 'group',
-          order = 1,
-          disabled = function() return not CFW3.db.profile.turnOn end,
-          name = L["SN"],
-          desc = L["SND"],
-          args = {
-            broadcast = {
-              type = 'group',
-              name = L["BRODG"],
-              desc = L["BRODD"],
-              args = {
-                broadcast = {
-                  type = 'toggle',
-                  order = 1,
-                  width = "full",
-                  name = L["BROD"],
-                  desc = L["BRODD"],
-                  get = function() return CFW3.db.profile.brd end,
-                  set = function()
-                    CFW3.db.profile.brd = not CFW3.db.profile.brd
-                  end,
-                },
-                chat = {
-                  type = 'toggle',
-                  order = 2,
-                  width = "full",
-                  disabled = function() return not CFW3.db.profile.brd end,
-                  name = L["BS"],
-                  desc = L["BSD"],
-                  get = function() return CFW3.db.profile.bs end,
-                  set = function()
-                    CFW3.db.profile.bs = not CFW3.db.profile.bs
-                  end,
-                },
-                party = {
-                  type = 'toggle',
-                  order = 3,
-                  width = "full",
-                  disabled = function() return not CFW3.db.profile.brd end,
-                  name = L["BP"],
-                  desc = L["BPD"],
-                  get = function() return CFW3.db.profile.bp end,
-                  set = function()
-                    CFW3.db.profile.bp = not CFW3.db.profile.bp
-                  end,
-                },
-                raid = {
-                  type = 'toggle',
-                  order = 4,
-                  width = "full",
-                  disabled = function() return not CFW3.db.profile.brd end,
-                  name = L["BR"],
-                  desc = L["BRD"],
-                  get = function() return CFW3.db.profile.br end,
-                  set = function()
-                    CFW3.db.profile.br = not CFW3.db.profile.br
-                  end,
-                },
-              },
-            },
-            dcf = {
-              type = 'toggle',
-              order = 1,
-              width = "full",
-              name = L["DCF"],
-              desc = L["DCFD"],
-              get = function() return CFW3.db.profile.dcf end,
-              set = function()
-                CFW3.db.profile.dcf = not CFW3.db.profile.dcf
-              end,
-            },
-            ctra = {
-              type = 'toggle',
-              order = 2,
-              width = "full",
-              name = L["CTRA"],
-              desc = L["CTRAD"],
-              get = function() return CFW3.db.profile.ctra end,
-              set = function()
-                CFW3.db.profile.ctra = not CFW3.db.profile.ctra
-              end,
-            },
-            audible = {
-              type = 'toggle',
-              order = 3,
-              width = "full",
-              name = L["AUD"],
-              desc = L["AUDD"],
-              get = function() return CFW3.db.profile.audible end,
-              set = function()
-                CFW3.db.profile.audible = not CFW3.db.profile.audible
-              end,
-            },
-          },
-        },
-        fubarOptions = {
-          type = 'group',
-          order = 2,
-          disabled = function()
-            local LFBP = LibStub("LibFuBarPlugin-3.0", true)
-            if (LFBP == nil) then
-              return true
-            else
-              return false
-            end
-          end,
-          name = "Fubar Options",
-          args = {
-            showHighTime = {
-              type = 'toggle',
-              order = 1,
---~               width = "double",
-              name = L["SHT"],
-              desc = L["SHTD"],
-              get = function() return CFW3.db.profile.showHighTime end,
-              set = function()
-                CFW3.db.profile.showHighTime = not CFW3.db.profile.showHighTime
-                self:UpdateFuBarPlugin()
-              end,
-            },
-            showLowTime = {
-              type = 'toggle',
-              order = 2,
-              width = "double",
-              name = L["SLT"],
-              desc = L["SLTD"],
-              get = function() return CFW3.db.profile.showLowTime end,
-              set = function()
-                CFW3.db.profile.showLowTime = not CFW3.db.profile.showLowTime
-                self:UpdateFuBarPlugin()
-              end,
-            },
- 						position = {
-							type = 'select',
+	type="group",
+	name = TF3.name,
+	handler = TF3,
+	childGroups = "tab",
+	args = {
+		generalGroup = {
+			type = "group",
+			name = TF3.name,
+			args = {
+				turnOn = {
+					type = 'toggle',
+					order = 1,
+					width = "double",
+					name = L["TurnOn"],
+					desc = L["TurnOnDesc"],
+					get = function() return TF3.db.profile.turnOn end,
+					set = function()
+						if (TF3.db.profile.turnOn == false) then
+							print(L.TOC.Title .. " " .. TF3.version .. " " .. L["ENABLED"])
+							TF3.db.profile.turnOn = not TF3.db.profile.turnOn
+						else
+							print(L.TOC.Title .. " " .. TF3.version .. " " .. L["DISABLED"])
+							TF3.db.profile.turnOn = not TF3.db.profile.turnOn
+						end
+					end,
+				},
+				channelGroup = {
+					type = "group",
+					handler = TF3,
+					order = 1,
+					disabled = function()
+						return not TF3.db.profile.turnOn
+					end,
+					name = L["channelGroup"],
+					desc = L["channelGroup"],
+					args = {
+						optionsHeader1 = {
+							type	= "header",
+							order	= 1,
+							name	= L["channelGroup"],
+						},
+						tradeChannel = {
+							type = 'toggle',
+							order = 2,
+							width = "double",
+							disabled = false,
+							name = L["TC"],
+							desc = L["TCD"],
+							get = function() return TF3.db.profile.filtertrade end,
+							set = function() TF3.db.profile.filtertrade = not TF3.db.profile.filtertrade end,
+						},
+						generalChannel = {
+							type = 'toggle',
 							order = 3,
-							name = L["FP"],
-							desc = L["FPD"],
-							values = {
-								LEFT = L["Left"],
-								CENTER = L["Center"],
-								RIGHT = L["Right"]
-							},
-							style = 'radio',
-							get = function()
-								return CFW3:GetPanel() and CFW3:GetPanel():GetPluginSide(CFW3)
+							width = "double",
+							disabled = false,
+							name = L["GC"],
+							desc = L["GCD"],
+							get = function() return TF3.db.profile.filtergeneral end,
+							set = function() TF3.db.profile.filtergeneral = not TF3.db.profile.filtergeneral end,
+						},
+						LFGChannel = {
+							type = 'toggle',
+							order = 4,
+							width = "double",
+							disabled = false,
+							name = L["LFGC"],
+							desc = L["LFGCD"],
+							get = function() return TF3.db.profile.filterLFG end,
+							set = function() TF3.db.profile.filterLFG = not TF3.db.profile.filterLFG end,
+						},
+						SAYChannel = {
+							type = 'toggle',
+							order = 5,
+							width = "double",
+							disabled = false,
+							name = L["SAYC"],
+							desc = L["SAYCD"],
+							get = function() return TF3.db.profile.filterSAY end,
+							set = function() TF3.db.profile.filterSAY = not TF3.db.profile.filterSAY end,
+						},
+						YELLChannel = {
+							type = 'toggle',
+							order = 6,
+							width = "double",
+							disabled = false,
+							name = L["YELLC"],
+							desc = L["YELLCD"],
+							get = function() return TF3.db.profile.filterYELL end,
+							set = function() TF3.db.profile.filterYELL = not TF3.db.profile.filterYELL end,
+						},
+					},
+				},
+				editFilterGroup = {
+					type = "group",
+					handler = TF3,
+					order = 2,
+					disabled = function()
+						return not TF3.db.profile.turnOn
+					end,
+					name = L["EditFilterGroup"],
+					desc = L["EditFilterGD"],
+					args = {
+						optionsHeader2 = {
+							type	= "header",
+							order	= 1,
+							name	= L["EditFilter"],
+						},
+						editfilter_enable = {
+							type = 'toggle',
+							order = 2,
+							width = "double",
+							name = L["EditFilter"],
+							desc = L["EditFilterD"],
+							get = function() return TF3.db.profile.addfilter_enable end,
+							set = function() TF3.db.profile.addfilter_enable = not TF3.db.profile.addfilter_enable end,
+						},
+						optionsHeader2a = {
+							type	= "header",
+							order	= 3,
+							name	= L["BTF"],
+						},
+						reset_tradefilters = {
+							type = 'execute',
+							disabled = function()
+								return not TF3.db.profile.addfilter_enable
 							end,
+							order = 4,
+							width = "double",
+							name = L["RTF"],
+							desc = L["RTF"],
+							func = function() TF3.db.profile.filters.TRADE = TF3:CopyTable(L.FILTERS.TRADE) end,
+						},
+						tradefilters = {
+							type = 'input',
+							disabled = function()
+								return not TF3.db.profile.addfilter_enable
+							end,
+							multiline = 8,
+							order = 5,
+							width = "full",
+							name = L["BTF"],
+--~ 							desc = L["BTF"],
+							get = function(info)
+								local ret = ""
+									for k, v in pairs(TF3.db.profile.filters.TRADE) do
+										if ret == "" then
+											ret = v
+										else
+											ret = ret .. "\n" .. v
+										end
+									end
+									return ret
+								end,
 							set = function(info, value)
-								if CFW3:GetPanel() then
-									CFW3:GetPanel():SetPluginSide(CFW3, value)
+								TF3:WipeTable(TF3.db.profile.filters.TRADE)
+								local tbl = { strsplit("\n", value) }
+								for k, v in pairs(tbl) do
+									key = "FILTER"
+									TF3.db.profile.filters.TRADE[key..k] = v
 								end
 							end,
 						},
-            hideIcon = {
-              type = "toggle",
-              order = 4,
-              width = "full",
-              name = L["Hide minimap/FuBar icon"],
-              desc = L["Hide minimap/FuBar icon"],
-              get = function(info) return CFW3.db.profile.HideMinimapButton end,
-              set = function(info, v)
-                CFW3.db.profile.HideMinimapButton = v
-                CFW3:UpdateFuBarSettings()
-              end,
-            },
-            showIcon = {
-              type = "toggle",
-              order = 5,
-              width = "full",
-              name = L["Show icon"],
-              desc = L["Show icon"],
-              get = function(info) return CFW3:IsFuBarIconShown() end,
-              set = function(info, v) CFW3:ToggleFuBarIconShown() end,
-              disabled = GetFuBarMinimapAttachedStatus,
-            },
-            attachMinimap = {
-              type = "toggle",
-              order = 6,
-              width = "full",
-              name = L["Attach to minimap"],
-              desc = L["Attach to minimap"],
-              get = function(info) return CFW3:IsFuBarMinimapAttached() end,
-              set = function(info, v)
-                CFW3:ToggleFuBarMinimapAttached()
-                CFW3.db.profile.AttachMinimap = CFW3:IsFuBarMinimapAttached()
-              end,
-              disabled = function() return CFW3.db.profile.HideMinimapButton end,
-            },
-            showText = {
-              type = "toggle",
-              order = 7,
-              width = "full",
-              name = L["Show text"],
-              desc = L["Show text"],
-              get = function(info) return CFW3:IsFuBarTextShown() end,
-              set = function(info, v) CFW3:ToggleFuBarTextShown() end,
-              disabled = GetFuBarMinimapAttachedStatus,
-            },
-						detachTooltip = {
+						optionsHeader2b = {
+							type	= "header",
+							order	= 6,
+							name	= L["BCF"],
+						},
+						reset_basefilters = {
+							type = 'execute',
+							disabled = function()
+								return not TF3.db.profile.addfilter_enable
+							end,
+							order = 7,
+							width = "double",
+							name = L["RBF"],
+							desc = L["RBF"],
+							func = function() TF3.db.profile.filters.BASE = TF3:CopyTable(L.FILTERS.BASE) end,
+						},
+
+						basefilters = {
+							type = 'input',
+							disabled = function()
+								return not TF3.db.profile.addfilter_enable
+							end,
+							multiline = 8,
+							order = 8,
+							width = "full",
+							name = L["BCF"],
+							desc = L["BCFD"],
+							get = function(info)
+								local ret = ""
+									for k, v in pairs(TF3.db.profile.filters.BASE) do
+										if ret == "" then
+											ret = v
+										else
+											ret = ret .. "\n" .. v
+										end
+									end
+									return ret
+								end,
+							set = function(info, value)
+								TF3:WipeTable(TF3.db.profile.filters.BASE)
+								local tbl = { strsplit("\n", value) }
+								for k, v in pairs(tbl) do
+									key = "FILTER"
+									TF3.db.profile.filters.BASE[key..k] = v
+								end
+							end,
+						},
+					},
+				},
+				listsGroup = {
+					type = "group",
+					handler = TF3,
+					order = 3,
+					disabled = function()
+						return not TF3.db.profile.turnOn
+					end,
+					name = L["listsGroup"],
+					desc = L["listsGD"],
+					args = {
+						optionsHeader3 = {
+							type	= "header",
+							order	= 1,
+							name	= L["bwLists"],
+						},
+						editlists_enable = {
+							type = 'toggle',
+							order = 2,
+							width = "double",
+							name = L["EditLists"],
+							desc = L["EditLists"],
+							get = function() return TF3.db.profile.editlists_enable end,
+							set = function() TF3.db.profile.editlists_enable = not TF3.db.profile.editlists_enable end,
+						},
+						blacklist_enable = {
+							type = 'toggle',
+							order = 3,
+							width = "double",
+							name = L["BLE"],
+							desc = L["BLE"],
+							get = function() return TF3.db.profile.blacklist_enable end,
+							set = function() TF3.db.profile.blacklist_enable = not TF3.db.profile.blacklist_enable end,
+						},
+						whitelist_enable = {
+							type = 'toggle',
+							order = 4,
+							width = "double",
+							name = L["WLE"],
+							desc = L["WLE"],
+							get = function() return TF3.db.profile.whitelist_enable end,
+							set = function() TF3.db.profile.whitelist_enable = not TF3.db.profile.whitelist_enable end,
+						},
+						optionsHeader3a = {
+							type	= "header",
+							order	= 5,
+							name	= L["bLists"],
+						},
+						reset_blist = {
+							type = 'execute',
+							disabled = function()
+								return not TF3.db.profile.editlists_enable
+							end,
+							order = 6,
+							width = "double",
+							name = L["RBLS"],
+							desc = L["RBLS"],
+							func = function() TF3.db.profile.blacklist = TF3:CopyTable(L.BLACKLIST) end,
+						},
+						blist = {
+							type = 'input',
+							disabled = function()
+								return not TF3.db.profile.editlists_enable
+							end,
+							multiline = 8,
+							order = 7,
+							width = "full",
+							name = L["bLists"],
+							get = function(info)
+								local ret = ""
+								for k, v in pairs(TF3.db.profile.blacklist) do
+									if ret == "" then
+										ret = v
+									else
+										ret = ret .. "\n" .. v
+									end
+								end
+								return ret
+							end,
+							set = function(info, value)
+								TF3:WipeTable(TF3.db.profile.blacklist)
+								local tbl = { strsplit("\n", value) }
+								for k, v in pairs(tbl) do
+									key = "BLIST"
+									TF3.db.profile.blacklist[key..k] = v
+								end
+							end,
+						},
+						optionsHeader3b = {
+							type	= "header",
+							order	= 8,
+							name	= L["wLists"],
+						},
+						reset_wlist = {
+							type = 'execute',
+							disabled = function()
+								return not TF3.db.profile.editlists_enable
+							end,
+							order = 9,
+							width = "double",
+							name = L["RWLS"],
+							desc = L["RWLS"],
+							func = function() TF3.db.profile.whitelist = TF3:CopyTable(L.WHITELIST) end,
+						},
+						wlist = {
+							type = 'input',
+							disabled = function()
+								return not TF3.db.profile.editlists_enable
+							end,
+							multiline = 8,
+							order = 10,
+							width = "full",
+							name = L["wLists"],
+							get = function(info)
+								local ret = ""
+								for k, v in pairs(TF3.db.profile.whitelist) do
+									if ret == "" then
+										ret = v
+									else
+										ret = ret .. "\n" .. v
+									end
+								end
+								return ret
+							end,
+							set = function(info, value)
+								TF3:WipeTable(TF3.db.profile.whitelist)
+								local tbl = { strsplit("\n", value) }
+								for k, v in pairs(tbl) do
+									key = "WLIST"
+									TF3.db.profile.whitelist[key..k] = v
+								end
+							end,
+						},
+					},
+				},
+				repeatGroup = {
+					type = "group",
+					handler = TF3,
+					order = 4,
+					disabled = function()
+						return not TF3.db.profile.turnOn
+					end,
+					name = L["REPEAT"],
+					desc = L["REPEAT"],
+					args = {
+						optionsHeader4 = {
+							type	= "header",
+							order	= 1,
+							name	= L["REPEAT"],
+						},
+						repeat_enable = {
+							type = 'toggle',
+							order = 2,
+							width = "double",
+							name = L["RPTENABLE"],
+							desc = L["RPTENABLED"],
+							get = function() return TF3.db.profile.repeat_enable end,
+							set = function() TF3.db.profile.repeat_enable = not TF3.db.profile.repeat_enable end,
+						},
+						num_repeats = {
+							type = 'input',
+							disabled = function()
+								return not TF3.db.profile.repeat_enable
+							end,
+							order = 3,
+							width = "full",
+							name = L["#RPT"],
+							desc = L["#RPTD"],
+							usage = L["RPTU"],
+							get = function(info) return TF3.db.profile.num_repeats end,
+							set = function(info, value) TF3.db.profile.num_repeats = value end,
+						},
+						time_repeats = {
+							type = 'input',
+							disabled = function()
+								return not TF3.db.profile.repeat_enable
+							end,
+							order = 4,
+							width = "full",
+							name = L["TRPT"],
+							desc = L["TRPTD"],
+							usage = L["RPTU"],
+							get = function(info) return TF3.db.profile.time_repeats end,
+							set = function(info, value) TF3.db.profile.time_repeats = value end,
+						},
+						repeats_blocked = {
+							type = 'input',
+							disabled = true,
+							order = 5,
+							width = "half",
+							name = L["RPTBLOCKED"],
+							desc = L["RPTBLOCKEDD"],
+							get = function(info) return tostring(TF3.db.profile.repeats_blocked) end,
+						},
+						reset_repeats_blocked = {
+							type = 'execute',
+							order = 6,
+							width = "half",
+							name = L["RPTRESET"],
+							desc = L["RPTRESETD"],
+							func = function() TF3.db.profile.repeats_blocked = 0 end,
+						},
+					},
+				},
+				outputGroup = {
+					type = "group",
+					handler = TF3,
+					order = 5,
+					disabled = function()
+						return not TF3.db.profile.turnOn
+					end,
+					name = L["OUTPUT"],
+					desc = L["OUTPUT"],
+					args = {
+						optionsHeader5 = {
+							type	= "header",
+							order	= 1,
+							name	= L["OUTPUT"],
+						},
+						redirect = {
+							type = 'toggle',
+							order = 2,
+							width = "full",
+							name = L["Redir"],
+							desc = L["RedirDesc"],
+							get = function() return TF3.db.profile.redirect end,
+							set = function() TF3.db.profile.redirect = not TF3.db.profile.redirect end,
+						},
+						redirect_blacklist = {
+							type = 'toggle',
+							order = 3,
+							width = "full",
+							name = L["RedirBL"],
+							desc = L["RedirDesc"],
+							get = function() return TF3.db.profile.redirect_blacklist end,
+							set = function() TF3.db.profile.redirect_blacklist = not TF3.db.profile.redirect_blacklist end,
+						},
+						--@alpha@
+						optionsHeader6 = {
+							type	= "header",
+							order	= 4,
+							name	= L["DEBUGGING"],
+						},
+						debug = {
+							type = 'toggle',
+							order = 5,
+							width = "full",
+							disabled = false,
+							hidden = false,
+							name = L["Debug"],
+							desc = L["DebugDesc"],
+							get = function() return TF3.db.profile.debug end,
+							set = function() TF3.db.profile.debug = not TF3.db.profile.debug end,
+						},
+						debug_checking = {
+							type = 'toggle',
+							order = 6,
+							width = "full",
+							disabled = false,
+							hidden = false,
+							name = L["DebugChecking"],
+							desc = L["DebugCheckingD"],
+							get = function() return TF3.db.profile.debug_checking end,
+							set = function() TF3.db.profile.debug_checking = not TF3.db.profile.debug_checking end,
+						},
+						--@end-alpha@
+						optionsHeader4 = {
+							type	= "header",
+							order	= 7,
+							name	= L["FSELF"],
+							desc = L["FSELFD"],
+						},
+						filterSELF = {
 							type = 'toggle',
 							order = 8,
-              width = "full",
-							name = L["Detach FuBar tooltip"],
-							desc = L["Detach the CheckFearWard3 tooltip from FuBar"],
-							get = function() return CFW3:IsFuBarTooltipDetached() end,
-							set = function() CFW3:ToggleFuBarTooltipDetached() end,
+							width = "double",
+							disabled = false,
+							name = L["FSELF"],
+							desc = L["FSELFD"],
+							get = function() return TF3.db.profile.filterSELF end,
+							set = function() TF3.db.profile.filterSELF = not TF3.db.profile.filterSELF end,
 						},
-          },
-        },
-      },
-    },  
-  },
+					},
+				},
+			},
+		},
+	},
 }
