@@ -16,7 +16,8 @@
 ## Version: @project-version@
 ## Revision: @project-revision@
 
-## OptionalDeps: Ace3, FuBar, LibAboutPanel, LibDBIcon-1.0, Tablet-2.0
+## RequiredDeps: Ace3
+## OptionalDeps: FuBar, Tablet-2.0, LibAboutPanel
 ## SavedVariables: CheckFearWard3DB
 ## X-LoadOn-Group: true
 

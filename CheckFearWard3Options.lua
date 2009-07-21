@@ -51,6 +51,7 @@ options = {
         statusNotification = {
           type = 'group',
           order = 1,
+          disabled = function() return not CFW3.db.profile.turnOn end,
           name = L["SN"],
           desc = L["SND"],
           args = {
@@ -68,7 +69,6 @@ options = {
                   get = function() return CFW3.db.profile.brd end,
                   set = function()
                     CFW3.db.profile.brd = not CFW3.db.profile.brd
-                    CFW3:UpdateFuBarPlugin()
                   end,
                 },
                 chat = {
@@ -81,7 +81,6 @@ options = {
                   get = function() return CFW3.db.profile.bs end,
                   set = function()
                     CFW3.db.profile.bs = not CFW3.db.profile.bs
-                    self:UpdateFuBarPlugin()
                   end,
                 },
                 party = {
@@ -94,7 +93,6 @@ options = {
                   get = function() return CFW3.db.profile.bp end,
                   set = function()
                     CFW3.db.profile.bp = not CFW3.db.profile.bp
-                    self:UpdateFuBarPlugin()
                   end,
                 },
                 raid = {
@@ -107,7 +105,6 @@ options = {
                   get = function() return CFW3.db.profile.br end,
                   set = function()
                     CFW3.db.profile.br = not CFW3.db.profile.br
-                    self:UpdateFuBarPlugin()
                   end,
                 },
               },
@@ -121,7 +118,6 @@ options = {
               get = function() return CFW3.db.profile.dcf end,
               set = function()
                 CFW3.db.profile.dcf = not CFW3.db.profile.dcf
-                self:UpdateFuBarPlugin()
               end,
             },
             ctra = {
@@ -133,7 +129,6 @@ options = {
               get = function() return CFW3.db.profile.ctra end,
               set = function()
                 CFW3.db.profile.ctra = not CFW3.db.profile.ctra
-                self:UpdateFuBarPlugin()
               end,
             },
             audible = {
@@ -145,7 +140,6 @@ options = {
               get = function() return CFW3.db.profile.audible end,
               set = function()
                 CFW3.db.profile.audible = not CFW3.db.profile.audible
-                self:UpdateFuBarPlugin()
               end,
             },
           },
@@ -153,6 +147,14 @@ options = {
         fubarOptions = {
           type = 'group',
           order = 2,
+          disabled = function()
+            local LFBP = LibStub("LibFuBarPlugin-3.0", true)
+            if (LFBP == nil) then
+              return true
+            else
+              return false
+            end
+          end,
           name = "Fubar Options",
           args = {
             showHighTime = {

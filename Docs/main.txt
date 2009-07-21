@@ -10,9 +10,15 @@ Check Fear Ward has the ability to track who has cast their Fear Ward buff and h
 <<code php>>/CFW<</code>>
 
 === ToDo
-*Ace3
-*LDB Support
+*--Ace3--
+*--LDB Support--
 *CombatLog filtering to find who cast Fear Ward buff on whom
 
+=== ChangeLog
+++r70++
+*++Switch from Rock to Ace3++
+*++LDB integration added --though tooltip is not "feed" ready--++
+\\
+\\
 === Supported Translations
 //Please help localize this project// [[http://www.wowace.com/projects/fu-bar_check-fear-ward-fu/localization/|HERE]]

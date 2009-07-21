@@ -111,105 +111,21 @@ function CFW3:OpenOptions()
 end
 
 function CFW3:IsLoggedIn()
-	-- LDB launcher
 	if LDB then
-		CheckFearWard3Launcher = LDB:NewDataObject("CheckFearWard3", {
-			type = "launcher",
-			icon = "Interface\\AddOns\\CheckFearWard3\\icon",
-			OnClick = function(clickedframe, button)
-				if (button == "RightButton") then
-					CFW3:OpenOptions()
-				else
-					if(members == nil) then
-						members = {};
-					end
-					for k in pairs(members) do
-						if(members[k] ~= 0) then
-							msg = buffSearchString.." ["..UnitName("player").."]: "..CFW3:CalculateTimeLeft(members[k])
-							CFW3:AnnounceLostBuff(msg, unit)
-						end
-					end
-				end
-			end,
-			OnTooltipShow = function(tt)
-				tt:AddLine(CFW3:OnUpdateFuBarText())
-				if(members == nil) then
-					members = {};
-				end
-				local linesAdded = false
-				for k in pairs(members) do
-					if(members[k] ~= 0) then
-						if(members[k] == -1) then
-							tt:AddLine(k .. ": " .. L["Unknown"])
-						else
-							tt:AddLine(k .. ": " .. CFW3:CalculateTimeLeft(members[k]))
-						end
-						linesAdded = true;
-					end
-				end
-				if linesAdded == false then
-					tt:AddLine(L["No"] .. " "..buffSearchString.." " .. L["Buff"])
-				end
-			end,
-		})
-		if LDBIcon and not IsAddOnLoaded("Broker2FuBar") and not IsAddOnLoaded("FuBar") then
-			LDBIcon:Register("CheckFearWard3", CheckFearWard3Launcher, db.MinimapIcon)
-		end
+		CFW3:InitLDB()
 	end
-
-	-- Optional launcher support for LFBP-3.0 if present, this code is placed here so
-	-- that it runs after all other addons have loaded since we don't embed LFBP-3.0
-	-- Yes, this is one big hack since LFBP-3.0 is a Rock library, and we embed it
-	-- via Ace3. OnEmbedInitialize() needs to be called manually.  --Omen
-	if LibStub:GetLibrary("LibFuBarPlugin-3.0", true) and not IsAddOnLoaded("FuBar2Broker") then
-		local LFBP = LibStub:GetLibrary("LibFuBarPlugin-3.0")
-		LibStub("AceAddon-3.0"):EmbedLibrary(self, "LibFuBarPlugin-3.0")
-		self:SetFuBarOption('hasIcon', true)
-		self:SetFuBarOption('hasNoColor', true)
-		self:SetFuBarOption('detachedTooltip', false)
-		self:SetFuBarOption('iconPath', [[Interface\AddOns\CheckFearWard3\icon]])
-		self:SetFuBarOption('defaultPosition', "CENTER")
-		self:SetFuBarOption('tooltipType', "Tablet-2.0")
-		self:SetFuBarOption('clickableTooltip', true)
-		self:SetFuBarOption("configType", "None")
-		LFBP:OnEmbedInitialize(self)
-		function CFW3:OnFuBarClick(button)
-			if (button == "RightButton") then
-				CFW3:OpenOptions()
-			else
-				if(members == nil) then
-					members = {};
-				end
-				for k in pairs(members) do
-					if(members[k] ~= 0) then
-						msg = buffSearchString.." ["..UnitName("player").."]: "..CFW3:CalculateTimeLeft(members[k])
-						CFW3:AnnounceLostBuff(msg, unit)
-					end
-				end
-			end
-		end
-		CFW3:UpdateFuBarPlugin()
-		CFW3:UpdateFuBarSettings()
-		CFW3:ScheduleRepeatingTimer("UpdateFuBarPlugin", 1)
-		CFW3:ScheduleRepeatingTimer("OnDataUpdate", 1)
-	end
+	CFW3:InitFubar()
+	CFW3:ScheduleRepeatingTimer("OnDataUpdate", 0.5)
+--~ 	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", "CheckFearWard_CL")
+	self:UnregisterEvent("PLAYER_LOGIN")
 end
 
-function CFW3:UpdateFuBarSettings()
-	if LibStub:GetLibrary("LibFuBarPlugin-3.0", true) then
-		if CFW3.db.profile.HideMinimapButton then
-			self:Hide()
-		else
-			self:Show()
-			if self:IsFuBarMinimapAttached() ~= CFW3.db.profile.AttachMinimap then
-				self:ToggleFuBarMinimapAttached()
-			end
-		end
+function CFW3:CheckFearWard_CL(self, event, ...)
+	local combatEvent, sourceName, destName = arg2, arg4, arg7 or select(2,4,7)
+	local spellId, spellName = arg9, arg10 or select(9, 10)
+	if (combatEvent == "SPELL_AURA_APPLIED" and find(spellName,L["Fear Ward"])) then
+		playerName = sourceName
 	end
-end
-
-local function GetFuBarMinimapAttachedStatus(info)
-	return CFW3:IsFuBarMinimapAttached() or CFW3.db.profile.HideMinimapButton
 end
 
 function CFW3:OnDataUpdate()
@@ -294,29 +210,6 @@ function CFW3:CheckStatus(unit)
 		end
 end
 
-function CFW3:AnnounceLostBuff(msg, unit)
-	local numraid = GetNumRaidMembers()
-	local numparty = GetNumPartyMembers()
-	if (CFW3.db.profile.dcf) then
-		DEFAULT_CHAT_FRAME:AddMessage(msg, 1.0, 0.0, 0.0, 0.0, 53, 5.0)
-	end
-	if (CFW3.db.profile.ctra) then
-		RaidNotice_AddMessage(RaidBossEmoteFrame,msg , ChatTypeInfo["RAID_WARNING"])
-	end
-	if (CFW3.db.profile.audible) then
-		PlaySoundFile("Interface\\AddOns\\CheckFearWard3\\Alert.wav")
-	end
-	if (CFW3.db.profile.brd and CFW3.db.profile.bs) then
-		SendChatMessage(msg, "SAY", ChatFrameEditBox.language, "CHANNEL")
-	end
-	if (CFW3.db.profile.brd and CFW3.db.profile.bp and numparty >= 1) then
-		SendChatMessage(msg, "PARTY", ChatFrameEditBox.language, "CHANNEL")
-	end
-	if (CFW3.db.profile.brd and CFW3.db.profile.br and numraid >= 1) then
-		SendChatMessage(msg, "RAID", ChatFrameEditBox.language, "CHANNEL")
-	end
-end
-
 function CFW3:CheckBuffPresent(unit)
 	local buffFound = 0
 	local buffIttr = 1
@@ -327,65 +220,6 @@ function CFW3:CheckBuffPresent(unit)
 			buffIttr = buffIttr + 1
 		end
 	return buffFound
-end
-
-function CFW3:OnUpdateFuBarText()
-	local str = "";
-	str = buffSearchString.." " .. L["Buff"] .. ": " .. checkTotalWarded;
-	if(currentHigh ~= 0) then
-		if(CFW3.db.profile.showHighTime and not CFW3.db.profile.showLowTime) then
-			local highMinutes = CFW3:CalculateTimeLeft(currentHigh)
-			str = str .. formatIt("%s"," - " .. L["High"] .. ": " .. highMinutes)
-		end
-		if(CFW3.db.profile.showLowTime and not CFW3.db.profile.showHighTime) then
-			local lowMinutes = CFW3:CalculateTimeLeft(currentLow)
-			str = str .. formatIt("%s"," - " .. L["Low"] .. ": " .. lowMinutes)
-		end
-		if(CFW3.db.profile.showLowTime and CFW3.db.profile.showHighTime) then
-			local lowMinutes = CFW3:CalculateTimeLeft(currentLow)
-			local highMinutes = CFW3:CalculateTimeLeft(currentHigh)
-			str = str .. formatIt("%s || %s"," - " .. L["Low"] .. ": "..lowMinutes, L["High"] .. ": " .. highMinutes)
-		end
-	end
-	CFW3:SetFuBarText(str)
-	return str
-end
-
-function CFW3:OnUpdateFuBarTooltip()
-	local cat = Tablet:AddCategory(
-		'columns', 2,
-		'child_textR', 1,
-		'child_textG', 1,
-		'child_textB', 0,
-		'child_text2R', 1,
-		'child_text2G', 1,
-		'child_text2B', 1
-	)
-	if(members == nil) then
-		members = {};
-	end
-	local linesAdded = false
-	for k in pairs(members) do
-		if(members[k] ~= 0) then
-			if(members[k] == -1) then
-				cat:AddLine(
-					'text',k..": ",
-					'text2', L["Unknown"]
-					)
-			else
-				cat:AddLine(
-					'text',k..": ",
-					'text2', CFW3:CalculateTimeLeft(members[k])
-					)
-			end
-			linesAdded = true;
-		end
-	end
-	if linesAdded == false then
-		cat:AddLine(
-			'text', L["No"] .. " "..buffSearchString.." " .. L["Buff"]
-			)
-	end
 end
 
 function CFW3:CalculateTimeLeft(recordedTime)
@@ -409,4 +243,225 @@ function CFW3:CalculateTimeLeft(recordedTime)
 		minutesString = totalMinutes
 	end
 	return minutesString..":"..secondsString
+end
+
+function CFW3:AnnounceLostBuff(msg, unit)
+	local numraid = GetNumRaidMembers()
+	local numparty = GetNumPartyMembers()
+	if (CFW3.db.profile.dcf) then
+		DEFAULT_CHAT_FRAME:AddMessage(msg, 1.0, 0.0, 0.0, 0.0, 53, 5.0)
+	end
+	if (CFW3.db.profile.ctra) then
+		RaidNotice_AddMessage(RaidBossEmoteFrame,msg , ChatTypeInfo["RAID_WARNING"])
+	end
+	if (CFW3.db.profile.audible) then
+		PlaySoundFile("Interface\\AddOns\\CheckFearWard3\\Alert.wav")
+	end
+	if (CFW3.db.profile.brd and CFW3.db.profile.bs) then
+		SendChatMessage(msg, "SAY", ChatFrameEditBox.language, "CHANNEL")
+	end
+	if (CFW3.db.profile.brd and CFW3.db.profile.bp and numparty >= 1) then
+		SendChatMessage(msg, "PARTY", ChatFrameEditBox.language, "CHANNEL")
+	end
+	if (CFW3.db.profile.brd and CFW3.db.profile.br and numraid >= 1) then
+		SendChatMessage(msg, "RAID", ChatFrameEditBox.language, "CHANNEL")
+	end
+end
+
+--[[ FuBar and LDB Functions ]]--
+--[[
+
+
+
+
+]]--
+do
+	local function OnTooltipShow(self)
+		self:AddLine(L["CheckFearWard3"])
+		CFW3:AddLinesLDB(self)
+	end
+	
+	local function OnEnter(self)
+		GameTooltip:SetOwner(self, "ANCHOR_NONE")
+		GameTooltip:SetPoint("TOPLEFT", self, "BOTTOMLEFT")
+		GameTooltip:ClearLines()
+		OnTooltipShow(GameTooltip)
+		GameTooltip:Show()
+	end
+
+	local function OnLeave(self)
+		GameTooltip:Hide()
+	end
+	
+	local function OnClick(clickedframe, button)
+		if (button == "RightButton") then
+			CFW3:OpenOptions()
+		else
+			CFW3:AnnounceOnClick()
+		end
+	end
+	
+	function CFW3:AddLinesLDB(self)
+		if(members == nil) then
+			members = {};
+		end
+		local linesAdded = false
+		for k in pairs(members) do
+			if(members[k] ~= 0) then
+				if(members[k] == -1) then
+					line = self:AddLine(k .. ": " .. L["Unknown"])
+				else
+					line = self:AddLine(k .. ": " .. CFW3:CalculateTimeLeft(members[k]))
+				end
+				linesAdded = true;
+				return line
+			end
+		end
+		if linesAdded == false then
+			line = self:AddLine(L["No"] .. " "..buffSearchString.." " .. L["BUFF"])
+		end
+		return line
+	end
+	
+	function CFW3:InitLDB()
+		local CFW3LDB = {
+			type = "data source",
+			icon = "Interface\\AddOns\\CheckFearWard3\\icon",
+			label = "",
+			value = CFW3:OnUpdateText(),
+			OnClick = OnClick,
+			OnEnter = OnEnter,
+			OnLeave = OnLeave,
+			OnTooltipShow = OnTooltipShow,
+		}
+		ldbObj = LDB:NewDataObject(L["CheckFearWard3"], CFW3LDB)
+		if LDBIcon and not IsAddOnLoaded("Broker2FuBar") and not IsAddOnLoaded("FuBar") then
+			LDBIcon:Register("CheckFearWard3", CFW3LDB, db.MinimapIcon)
+		end
+	end
+	
+	local frame = CreateFrame("frame")
+	local delay, interval = 0.5, 0.5
+	frame:SetScript("OnUpdate", function(frame, elapsed)
+		delay = delay + elapsed
+		if delay > interval then
+			ldbObj.value = CFW3:OnUpdateText()
+			ldbObj.text = (ldbObj.label)..(ldbObj.value)
+			delay = 0
+		end
+	end)
+	
+end
+	
+function CFW3:InitFubar()
+	-- Optional launcher support for LFBP-3.0 if present, this code is placed here so
+	-- that it runs after all other addons have loaded since we don't embed LFBP-3.0
+	-- Yes, this is one big hack since LFBP-3.0 is a Rock library, and we embed it
+	-- via Ace3. OnEmbedInitialize() needs to be called manually.  --Omen
+	if LibStub:GetLibrary("LibFuBarPlugin-3.0", true) and not IsAddOnLoaded("FuBar2Broker") then
+		local LFBP = LibStub:GetLibrary("LibFuBarPlugin-3.0")
+		LibStub("AceAddon-3.0"):EmbedLibrary(self, "LibFuBarPlugin-3.0")
+		self:SetFuBarOption('hasIcon', true)
+		self:SetFuBarOption('hasNoColor', true)
+		self:SetFuBarOption('detachedTooltip', false)
+		self:SetFuBarOption('iconPath', [[Interface\AddOns\CheckFearWard3\icon]])
+		self:SetFuBarOption('defaultPosition', "CENTER")
+		self:SetFuBarOption('tooltipType', "Tablet-2.0")
+		self:SetFuBarOption('clickableTooltip', true)
+		self:SetFuBarOption("configType", "None")
+		LFBP:OnEmbedInitialize(self)
+		function CFW3:OnFuBarClick(button)
+			if (button == "RightButton") then
+				CFW3:OpenOptions()
+			else
+				CFW3:AnnounceOnClick()
+			end
+		end
+		CFW3:UpdateFuBarPlugin()
+		CFW3:UpdateFuBarSettings()
+		CFW3:ScheduleRepeatingTimer("UpdateFuBarPlugin", 0.5)
+	end
+end
+
+function CFW3:UpdateFuBarSettings()
+	if LibStub:GetLibrary("LibFuBarPlugin-3.0", true) then
+		if (CFW3.db.profile.HideMinimapButton) then
+			self:Hide()
+		else
+			self:Show()
+		end
+		if (self:IsFuBarMinimapAttached() ~= CFW3.db.profile.AttachMinimap) then
+			self:ToggleFuBarMinimapAttached()
+		end
+	end
+end
+
+local function GetFuBarMinimapAttachedStatus(info)
+	return CFW3:IsFuBarMinimapAttached() or CFW3.db.profile.HideMinimapButton
+end
+
+function CFW3:OnUpdateFuBarText()
+	CFW3:SetFuBarText(CFW3:OnUpdateText())
+end
+
+function CFW3:OnUpdateText()
+	local str = "";
+	str = buffSearchString.." " .. L["BUFF"] .. ": " .. checkTotalWarded;
+	if(currentHigh ~= 0) then
+		if(CFW3.db.profile.showHighTime and not CFW3.db.profile.showLowTime) then
+			local highMinutes = CFW3:CalculateTimeLeft(currentHigh)
+			str = str .. formatIt("%s"," - " .. L["High"] .. ": " .. highMinutes)
+		end
+		if(CFW3.db.profile.showLowTime and not CFW3.db.profile.showHighTime) then
+			local lowMinutes = CFW3:CalculateTimeLeft(currentLow)
+			str = str .. formatIt("%s"," - " .. L["Low"] .. ": " .. lowMinutes)
+		end
+		if(CFW3.db.profile.showLowTime and CFW3.db.profile.showHighTime) then
+			local lowMinutes = CFW3:CalculateTimeLeft(currentLow)
+			local highMinutes = CFW3:CalculateTimeLeft(currentHigh)
+			str = str .. formatIt("%s || %s"," - " .. L["Low"] .. ": "..lowMinutes, L["High"] .. ": " .. highMinutes)
+		end
+	end
+	return str
+end
+
+function CFW3:OnUpdateFuBarTooltip()
+	local cat = Tablet:AddCategory(
+		'columns', 2,
+		'child_textR', 1,
+		'child_textG', 1,
+		'child_textB', 0,
+		'child_text2R', 1,
+		'child_text2G', 1,
+		'child_text2B', 1
+	)
+	if(members == nil) then
+		members = {};
+	end
+	local linesAdded = false
+	for k in pairs(members) do
+		if(members[k] ~= 0) then
+			if(members[k] == -1) then
+				cat:AddLine('text',k .. ": ",'text2', L["Unknown"])
+			else
+				cat:AddLine('text',k .. ": ",'text2', CFW3:CalculateTimeLeft(members[k]))
+			end
+			linesAdded = true;
+		end
+	end
+	if linesAdded == false then
+		cat:AddLine('text', L["No"] .. " "..buffSearchString.." " .. L["BUFF"])
+	end
+end
+
+function CFW3:AnnounceOnClick()
+	if(members == nil) then
+		members = {};
+	end
+	for k in pairs(members) do
+		if(members[k] ~= 0) then
+			msg = buffSearchString.." [".. k .."]: "..CFW3:CalculateTimeLeft(members[k])
+			CFW3:AnnounceLostBuff(msg, unit)
+		end
+	end
 end
