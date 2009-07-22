@@ -73,6 +73,8 @@ defaults = {
 		ctra = false,
 		audible = false,
 		debug = true,
+		AttachMinimap = false,
+		HideMinimapButton = false,
 		MinimapIcon = {},
 	},
 }
@@ -280,14 +282,13 @@ local function OnEnter(self)
 end
 
 local function OnLeave(self)
-  -- Release the tooltip
   LibQTip:Release(self.tooltip)
   self.tooltip = nil
 end
 
 local function OnClick(clickedframe, button)
 	if (button == "RightButton") then
-		CFW3:OpenOptions()
+		self:OpenOptions()
 	else
 		if(members == nil) then
 			members = {};
@@ -295,13 +296,13 @@ local function OnClick(clickedframe, button)
 		for k in pairs(members) do
 			if(members[k] ~= 0) then
 				msg = buffSearchString.." [".. k .."]: "..CFW3:CalculateTimeLeft(members[k])
-				CFW3:AnnounceLostBuff(msg, unit)
+				self:AnnounceLostBuff(msg, unit)
 			end
 		end
 	end
 end
 
-function CFW3:OnUpdateText()
+function CFW3:OnTextUpdate()
 	local str = "";
 	str = buffSearchString.." " .. L["BUFF"] .. ": " .. checkTotalWarded;
 	if(currentHigh ~= 0) then
@@ -320,6 +321,7 @@ function CFW3:OnUpdateText()
 		end
 	end
 	self.launcher.text = str
+	return str
 end
 
 function CFW3:IsLoggedIn()
@@ -329,7 +331,7 @@ function CFW3:IsLoggedIn()
 			type = "data source",
 			icon = "Interface\\AddOns\\CheckFearWard3\\icon",
 			label = "",
-			value = OnUpdateText,
+			value = OnTextUpdate,
 			OnClick = OnClick,
 			OnEnter = function(self)
 				OnEnter(self)
@@ -342,15 +344,16 @@ function CFW3:IsLoggedIn()
 				end
 			end,
 		})
-		self.feedTimer = self:ScheduleRepeatingTimer("OnUpdateText", 0.25)
+		self.feedTimer = self:ScheduleRepeatingTimer("OnTextUpdate", 0.25)
 			
 		if LDBIcon then
 			LDBIcon:Register("CheckFearWard3", self.launcher, self.db.profile.MinimapIcon)
 		end
-		self:OnUpdateText()
+		self:OnTextUpdate()
 	end
 --~ 	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", "CheckFearWard_CL")
 	self:UnregisterEvent("PLAYER_LOGIN")
+	self:InitFubar()
 end
 
 function CFW3:CheckFearWard_CL(self, event, ...)
@@ -359,4 +362,80 @@ function CFW3:CheckFearWard_CL(self, event, ...)
 	if (combatEvent == "SPELL_AURA_APPLIED" and find(spellName,L["Fear Ward"])) then
 		playerName = sourceName
 	end
+end
+
+function CFW3:InitFubar()
+	if LibStub:GetLibrary("LibFuBarPlugin-3.0", true) and not IsAddOnLoaded("FuBar2Broker") then
+		local LFBP = LibStub:GetLibrary("LibFuBarPlugin-3.0")
+		LibStub("AceAddon-3.0"):EmbedLibrary(self, "LibFuBarPlugin-3.0")
+		self:SetFuBarOption('hasIcon', true)
+		self:SetFuBarOption('hasNoColor', true)
+		self:SetFuBarOption('cannotHideText ', true)
+		self:SetFuBarOption('detachedTooltip', false)
+		self:SetFuBarOption('iconPath', [[Interface\AddOns\CheckFearWard3\icon]])
+		self:SetFuBarOption('defaultPosition', "CENTER")
+		self:SetFuBarOption('clickableTooltip', true)
+		self:SetFuBarOption("configType", "None")
+		LFBP:OnEmbedInitialize(self)
+		function self:OnFuBarClick(button)
+			if (button == "RightButton") then
+				self:OpenOptions()
+			else
+				if(members == nil) then
+					members = {};
+				end
+				for k in pairs(members) do
+					if(members[k] ~= 0) then
+						msg = buffSearchString.." [".. k .."]: "..self:CalculateTimeLeft(members[k])
+						self:AnnounceLostBuff(msg, unit)
+					end
+				end
+			end
+		end
+		self:UpdateFuBarPlugin()
+		self:UpdateFuBarSettings()
+		self:ScheduleRepeatingTimer("UpdateFuBarPlugin", 0.5)
+	end
+end
+
+function self:OnUpdateFuBarTooltip()
+	GameTooltip:AddLine(L["CheckFearWard3"])
+	if(members == nil) then
+		members = {};
+	end
+	local linesAdded = false
+	for k in pairs(members) do
+		if(members[k] ~= 0) then
+			if(members[k] == -1) then
+				GameTooltip:AddLine(k .. ": " .. L["Unknown"])
+			else
+				GameTooltip:AddLine(k .. ": " .. CFW3:CalculateTimeLeft(members[k]))
+			end
+			linesAdded = true;
+		end
+	end
+	if linesAdded == false then
+		GameTooltip:AddLine(L["No"] .. " "..buffSearchString.." " .. L["BUFF"])
+	end
+end
+
+function self:UpdateFuBarSettings()
+	if LibStub:GetLibrary("LibFuBarPlugin-3.0", true) then
+		if (self.db.profile.HideMinimapButton) then
+			self:Hide()
+		else
+			self:Show()
+		end
+		if (self:IsFuBarMinimapAttached() ~= self.db.profile.AttachMinimap) then
+			self:ToggleFuBarMinimapAttached()
+		end
+	end
+end
+
+local function GetFuBarMinimapAttachedStatus(info)
+	return self:IsFuBarMinimapAttached() or self.db.profile.HideMinimapButton
+end
+
+function self:OnUpdateFuBarText()
+	self:SetFuBarText(self:OnTextUpdate())
 end
