@@ -33,8 +33,9 @@ File Date: @file-date-iso@
 ]]--
 CheckFearWard3 = LibStub("AceAddon-3.0"):NewAddon("CheckFearWard3", "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0")
 local L =  LibStub("AceLocale-3.0"):GetLocale("CheckFearWard3", false)
-local LDB = LibStub("LibDataBroker-1.1", true)
-local Tablet = AceLibrary("Tablet-2.0")
+local LibQTip = LibStub("LibQTip-1.0")
+local LDB = LibStub("LibDataBroker-1.1")
+local LDBIcon = LDB and LibStub("LibDBIcon-1.0")
 local CFW3, self = CheckFearWard3, CheckFearWard3
 
 local MAJOR_VERSION = "3.1"
@@ -57,6 +58,9 @@ local checkTotalWarded = 0
 local inGroup = 0
 local inRaid = 0
 local initialscan = 1
+local launcher
+local tooltip
+local feedTimer
 
 defaults = {
 	profile = {
@@ -69,8 +73,7 @@ defaults = {
 		ctra = false,
 		audible = false,
 		debug = true,
-		AttachMinimap = false,
-		HideMinimapButton = false,
+		MinimapIcon = {},
 	},
 }
 
@@ -107,23 +110,6 @@ end
 function CFW3:OpenOptions()
 	InterfaceOptionsFrame_OpenToCategory(self.OptionsPanel.profiles)
 	InterfaceOptionsFrame_OpenToCategory(self.OptionsPanel)
-end
-
-function CFW3:IsLoggedIn()
-	if LFBP then
-		CFW3:InitFubar()
-	end
-	CFW3:ScheduleRepeatingTimer("OnDataUpdate", 0.5)
---~ 	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", "CheckFearWard_CL")
-	self:UnregisterEvent("PLAYER_LOGIN")
-end
-
-function CFW3:CheckFearWard_CL(self, event, ...)
-	local combatEvent, sourceName, destName = arg2, arg4, arg7 or select(2,4,7)
-	local spellId, spellName = arg9, arg10 or select(9, 10)
-	if (combatEvent == "SPELL_AURA_APPLIED" and find(spellName,L["Fear Ward"])) then
-		playerName = sourceName
-	end
 end
 
 function CFW3:OnDataUpdate()
@@ -266,39 +252,12 @@ function CFW3:AnnounceLostBuff(msg, unit)
 	end
 end
 
---[[ FuBar and LDB Functions ]]--
---[[
-
-
-
-
-]]--
-local function OnTooltipShow(self)
-	self:AddLine(L["CheckFearWard3"])
-	CFW3:AddLinesLDB(self)
-end
-	
+--[[ LDB ]]--
 local function OnEnter(self)
-	GameTooltip:SetOwner(self, "ANCHOR_NONE")
-	GameTooltip:SetPoint("TOPLEFT", self, "BOTTOMLEFT")
-	GameTooltip:ClearLines()
-	OnTooltipShow(GameTooltip)
-	GameTooltip:Show()
-end
-
-local function OnLeave(self)
-	GameTooltip:Hide()
-end
-	
-local function OnClick(clickedframe, button)
-	if (button == "RightButton") then
-		CFW3:OpenOptions()
-	else
-		CFW3:AnnounceOnClick()
-	end
-end
-	
-function CFW3:AddLinesLDB(self)
+	if tooltip then QTip:Release(tooltip) end
+	local tooltip = LibStub('LibQTip-1.0'):Acquire('CFW3Tip', 2, "LEFT", "RIGHT")
+	self.tooltip = tooltip
+	tooltip:AddHeader(L["CheckFearWard3"])
 	if(members == nil) then
 		members = {};
 	end
@@ -306,94 +265,40 @@ function CFW3:AddLinesLDB(self)
 	for k in pairs(members) do
 		if(members[k] ~= 0) then
 			if(members[k] == -1) then
-				line = self:AddLine(k .. ": " .. L["Unknown"])
+				line = tooltip:AddLine(k .. ": ", L["Unknown"])
 			else
-				line = self:AddLine(k .. ": " .. CFW3:CalculateTimeLeft(members[k]))
+				line = tooltip:AddLine(k .. ": ", CFW3:CalculateTimeLeft(members[k]))
 			end
 			linesAdded = true;
-			return line
 		end
 	end
 	if linesAdded == false then
-		line = self:AddLine(L["No"] .. " "..buffSearchString.." " .. L["BUFF"])
+		line = tooltip:AddLine(L["No"] .. " "..buffSearchString.." " .. L["BUFF"], "")
 	end
-	return line
+	tooltip:SmartAnchorTo(self)
+	tooltip:Show()
 end
-	
-if LDB then	
-	local CFW3LDB = {
-		type = "data source",
-		icon = "Interface\\AddOns\\CheckFearWard3\\icon",
-		label = "",
-		value = OnUpdateText,
-		OnClick = OnClick,
-		OnEnter = OnEnter,
-		OnLeave = OnLeave,
-		OnTooltipShow = OnTooltipShow,
-	}
-	ldbObj = LDB:NewDataObject(L["CheckFearWard3"], CFW3LDB)
+
+local function OnLeave(self)
+  -- Release the tooltip
+  LibQTip:Release(self.tooltip)
+  self.tooltip = nil
 end
-	
-local frame = CreateFrame("frame")
-local delay, interval = 0.5, 0.5
-frame:SetScript("OnUpdate", function(frame, elapsed)
-delay = delay + elapsed
-	if delay > interval then
-		ldbObj.value = CFW3:OnUpdateText()
-		ldbObj.text = (ldbObj.label)..(ldbObj.value)
-		delay = 0
-	end
-end)
-	
-function CFW3:InitFubar()
-	-- Optional launcher support for LFBP-3.0 if present, this code is placed here so
-	-- that it runs after all other addons have loaded since we don't embed LFBP-3.0
-	-- Yes, this is one big hack since LFBP-3.0 is a Rock library, and we embed it
-	-- via Ace3. OnEmbedInitialize() needs to be called manually.  --Omen
-	if LibStub:GetLibrary("LibFuBarPlugin-3.0", true) and not IsAddOnLoaded("FuBar2Broker") then
-		local LFBP = LibStub:GetLibrary("LibFuBarPlugin-3.0")
-		LibStub("AceAddon-3.0"):EmbedLibrary(self, "LibFuBarPlugin-3.0")
-		self:SetFuBarOption('hasIcon', true)
-		self:SetFuBarOption('hasNoColor', true)
-		self:SetFuBarOption('detachedTooltip', false)
-		self:SetFuBarOption('iconPath', [[Interface\AddOns\CheckFearWard3\icon]])
-		self:SetFuBarOption('defaultPosition', "CENTER")
-		self:SetFuBarOption('tooltipType', "Tablet-2.0")
-		self:SetFuBarOption('clickableTooltip', true)
-		self:SetFuBarOption("configType", "None")
-		LFBP:OnEmbedInitialize(self)
-		function CFW3:OnFuBarClick(button)
-			if (button == "RightButton") then
-				CFW3:OpenOptions()
-			else
-				CFW3:AnnounceOnClick()
+
+local function OnClick(clickedframe, button)
+	if (button == "RightButton") then
+		CFW3:OpenOptions()
+	else
+		if(members == nil) then
+			members = {};
+		end
+		for k in pairs(members) do
+			if(members[k] ~= 0) then
+				msg = buffSearchString.." [".. k .."]: "..CFW3:CalculateTimeLeft(members[k])
+				CFW3:AnnounceLostBuff(msg, unit)
 			end
 		end
-		CFW3:UpdateFuBarPlugin()
-		CFW3:UpdateFuBarSettings()
-		CFW3:ScheduleRepeatingTimer("UpdateFuBarPlugin", 0.5)
 	end
-end
-
-function CFW3:UpdateFuBarSettings()
-	if LibStub:GetLibrary("LibFuBarPlugin-3.0", true) then
-		if (CFW3.db.profile.HideMinimapButton) then
-			self:Hide()
-		else
-			self:Show()
-		end
-		if (self:IsFuBarMinimapAttached() ~= CFW3.db.profile.AttachMinimap) then
-			self:ToggleFuBarMinimapAttached()
-		end
-	end
-end
-
-local function GetFuBarMinimapAttachedStatus(info)
-	return CFW3:IsFuBarMinimapAttached() or CFW3.db.profile.HideMinimapButton
-end
-
-function CFW3:OnUpdateFuBarText()
-	CFW3:SetFuBarText(CFW3:OnUpdateText())
 end
 
 function CFW3:OnUpdateText()
@@ -414,46 +319,44 @@ function CFW3:OnUpdateText()
 			str = str .. formatIt("%s || %s"," - " .. L["Low"] .. ": "..lowMinutes, L["High"] .. ": " .. highMinutes)
 		end
 	end
-	return str
+	self.launcher.text = str
 end
 
-function CFW3:OnUpdateFuBarTooltip()
-	local cat = Tablet:AddCategory(
-		'columns', 2,
-		'child_textR', 1,
-		'child_textG', 1,
-		'child_textB', 0,
-		'child_text2R', 1,
-		'child_text2G', 1,
-		'child_text2B', 1
-	)
-	if(members == nil) then
-		members = {};
-	end
-	local linesAdded = false
-	for k in pairs(members) do
-		if(members[k] ~= 0) then
-			if(members[k] == -1) then
-				cat:AddLine('text',k .. ": ",'text2', L["Unknown"])
-			else
-				cat:AddLine('text',k .. ": ",'text2', CFW3:CalculateTimeLeft(members[k]))
-			end
-			linesAdded = true;
+function CFW3:IsLoggedIn()
+	self:ScheduleRepeatingTimer("OnDataUpdate", 0.25)
+	if LDB then	
+		self.launcher = LDB:NewDataObject(L["CheckFearWard3"], {
+			type = "data source",
+			icon = "Interface\\AddOns\\CheckFearWard3\\icon",
+			label = "",
+			value = OnUpdateText,
+			OnClick = OnClick,
+			OnEnter = function(self)
+				OnEnter(self)
+			end,
+			OnLeave = function(self)
+				if tooltip and MouseIsOver(tooltip) then 
+					tooltip:SetScript("OnUpdate", HideTooltips)
+				else
+					OnLeave(self)
+				end
+			end,
+		})
+		self.feedTimer = self:ScheduleRepeatingTimer("OnUpdateText", 0.25)
+			
+		if LDBIcon then
+			LDBIcon:Register("CheckFearWard3", self.launcher, self.db.profile.MinimapIcon)
 		end
+		self:OnUpdateText()
 	end
-	if linesAdded == false then
-		cat:AddLine('text', L["No"] .. " "..buffSearchString.." " .. L["BUFF"])
-	end
+--~ 	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", "CheckFearWard_CL")
+	self:UnregisterEvent("PLAYER_LOGIN")
 end
 
-function CFW3:AnnounceOnClick()
-	if(members == nil) then
-		members = {};
-	end
-	for k in pairs(members) do
-		if(members[k] ~= 0) then
-			msg = buffSearchString.." [".. k .."]: "..CFW3:CalculateTimeLeft(members[k])
-			CFW3:AnnounceLostBuff(msg, unit)
-		end
+function CFW3:CheckFearWard_CL(self, event, ...)
+	local combatEvent, sourceName, destName = arg2, arg4, arg7 or select(2,4,7)
+	local spellId, spellName = arg9, arg10 or select(9, 10)
+	if (combatEvent == "SPELL_AURA_APPLIED" and find(spellName,L["Fear Ward"])) then
+		playerName = sourceName
 	end
 end

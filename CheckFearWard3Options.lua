@@ -144,153 +144,42 @@ options = {
             },
           },
         },
-        fubarOptions = {
-          type = 'group',
-          order = 2,
-          hidden = function()
-            local LFBP = LibStub("LibFuBarPlugin-3.0", true)
-            if (LFBP == nil) then
-              return true
-            else
-              return false
-            end
-          end,
-          name = L["Fubar Options"],
-          args = {
-            showHighTime = {
-              type = 'toggle',
-              order = 1,
---~               width = "double",
-              name = L["SHT"],
-              desc = L["SHTD"],
-              get = function() return CFW3.db.profile.showHighTime end,
-              set = function()
-                CFW3.db.profile.showHighTime = not CFW3.db.profile.showHighTime
-                self:UpdateFuBarPlugin()
-              end,
-            },
-            showLowTime = {
-              type = 'toggle',
-              order = 2,
-              width = "double",
-              name = L["SLT"],
-              desc = L["SLTD"],
-              get = function() return CFW3.db.profile.showLowTime end,
-              set = function()
-                CFW3.db.profile.showLowTime = not CFW3.db.profile.showLowTime
-                self:UpdateFuBarPlugin()
-              end,
-            },
- 						position = {
-							type = 'select',
-							order = 3,
-							name = L["FP"],
-							desc = L["FPD"],
-							values = {
-								LEFT = L["Left"],
-								CENTER = L["Center"],
-								RIGHT = L["Right"]
-							},
-							style = 'radio',
-							get = function()
-								return CFW3:GetPanel() and CFW3:GetPanel():GetPluginSide(CFW3)
-							end,
-							set = function(info, value)
-								if CFW3:GetPanel() then
-									CFW3:GetPanel():SetPluginSide(CFW3, value)
-								end
-							end,
-						},
-            hideIcon = {
-              type = "toggle",
-              order = 4,
-              width = "full",
-              name = L["Hide minimap/FuBar icon"],
-              desc = L["Hide minimap/FuBar icon"],
-              get = function(info) return CFW3.db.profile.HideMinimapButton end,
-              set = function(info, v)
-                CFW3.db.profile.HideMinimapButton = v
-                CFW3:UpdateFuBarSettings()
-              end,
-            },
-            showIcon = {
-              type = "toggle",
-              order = 5,
-              width = "full",
-              name = L["Show icon"],
-              desc = L["Show icon"],
-              get = function(info) return CFW3:IsFuBarIconShown() end,
-              set = function(info, v) CFW3:ToggleFuBarIconShown() end,
-              disabled = GetFuBarMinimapAttachedStatus,
-            },
-            attachMinimap = {
-              type = "toggle",
-              order = 6,
-              width = "full",
-              name = L["Attach to minimap"],
-              desc = L["Attach to minimap"],
-              get = function(info) return CFW3:IsFuBarMinimapAttached() end,
-              set = function(info, v)
-                CFW3:ToggleFuBarMinimapAttached()
-                CFW3.db.profile.AttachMinimap = CFW3:IsFuBarMinimapAttached()
-              end,
-              disabled = function() return CFW3.db.profile.HideMinimapButton end,
-            },
-            showText = {
-              type = "toggle",
-              order = 7,
-              width = "full",
-              name = L["Show text"],
-              desc = L["Show text"],
-              get = function(info) return CFW3:IsFuBarTextShown() end,
-              set = function(info, v) CFW3:ToggleFuBarTextShown() end,
-              disabled = GetFuBarMinimapAttachedStatus,
-            },
-						detachTooltip = {
-							type = 'toggle',
-							order = 8,
-              width = "full",
-							name = L["Detach FuBar tooltip"],
-							desc = L["Detach the CheckFearWard3 tooltip from FuBar"],
-							get = function() return CFW3:IsFuBarTooltipDetached() end,
-							set = function() CFW3:ToggleFuBarTooltipDetached() end,
-						},
-          },
-        },
         LDBOptions = {
           type = 'group',
-          order = 3,
-          hidden = function()
-            local LFBP = LibStub("LibFuBarPlugin-3.0", true)
-            if (LFBP ~= nil) then
-              return true
-            else
-              return false
-            end
-          end,
+          order = 2,
           name = L["LDB Options"],
           args = {
+            MinimapIcon = {
+              type = "toggle",
+              order = 1,
+              name = "Show minimap button",
+              desc = "Show the CFW3 minimap button",
+              get = function(info) return not CFW3.db.profile.MinimapIcon.hide end,
+              set = function(info, value)
+                CFW3.db.profile.MinimapIcon.hide = not value
+                if value then LDBIcon:Show("CheckFearWard3") else LDBIcon:Hide("CheckFearWard3") end
+              end,
+              hidden = function() return not LDBIcon end,
+            },
             showHighTime = {
               type = 'toggle',
-              order = 1,
+              order = 2,
               name = L["SHT"],
               desc = L["SHTD"],
               get = function() return CFW3.db.profile.showHighTime end,
               set = function()
                 CFW3.db.profile.showHighTime = not CFW3.db.profile.showHighTime
-                self:UpdateFuBarPlugin()
               end,
             },
             showLowTime = {
               type = 'toggle',
-              order = 2,
+              order = 3,
               width = "double",
               name = L["SLT"],
               desc = L["SLTD"],
               get = function() return CFW3.db.profile.showLowTime end,
               set = function()
                 CFW3.db.profile.showLowTime = not CFW3.db.profile.showLowTime
-                self:UpdateFuBarPlugin()
               end,
             },
           },
