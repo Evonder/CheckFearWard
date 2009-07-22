@@ -21,4 +21,4 @@ Check Fear Ward has the ability to track who has cast their Fear Ward buff and h
 \\
 \\
 === Supported Translations
-//Please help localize this project// [[http://www.wowace.com/projects/fu-bar_check-fear-ward-fu/localization/|HERE]]
+//Please help localize this project// [[http://www.wowace.com/projects/check-fear-ward/localization/|HERE]]
