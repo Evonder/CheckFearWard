@@ -18,6 +18,13 @@ options = {
       name = CFW3.name,
       childGroups = 'tab',
       args = {
+				mainHeader = {
+					type = "description",
+					name = "  " .. L["Addon"].."\n\n",
+					order = 1,
+					image = "Interface\\Icons\\spell_holy_excorcism",
+					imageWidth = 32, imageHeight = 32,
+				},
         turnOn = {
           type = 'toggle',
           order = 1,

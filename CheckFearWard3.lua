@@ -32,7 +32,7 @@ File Date: @file-date-iso@
 
 ]]--
 CheckFearWard3 = LibStub("AceAddon-3.0"):NewAddon("CheckFearWard3", "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0")
-local L =  LibStub("AceLocale-3.0"):GetLocale("CheckFearWard3", false)
+local L =  LibStub("AceLocale-3.0"):GetLocale("CheckFearWard3")
 local LibQTip = LibStub("LibQTip-1.0")
 local LDB = LibStub("LibDataBroker-1.1")
 local LDBIcon = LDB and LibStub("LibDBIcon-1.0")
@@ -329,7 +329,7 @@ function CFW3:IsLoggedIn()
 	if LDB then	
 		self.launcher = LDB:NewDataObject(L["CheckFearWard3"], {
 			type = "data source",
-			icon = "Interface\\AddOns\\CheckFearWard3\\icon",
+			icon = "Interface\\Icons\\spell_holy_excorcism",
 			label = "",
 			value = OnTextUpdate,
 			OnClick = OnClick,
@@ -372,7 +372,7 @@ function CFW3:InitFubar()
 		self:SetFuBarOption('hasNoColor', true)
 		self:SetFuBarOption('cannotHideText ', true)
 		self:SetFuBarOption('detachedTooltip', false)
-		self:SetFuBarOption('iconPath', [[Interface\AddOns\CheckFearWard3\icon]])
+		self:SetFuBarOption('iconPath', [[Interface\Icons\spell_holy_excorcism]])
 		self:SetFuBarOption('defaultPosition', "CENTER")
 		self:SetFuBarOption('clickableTooltip', true)
 		self:SetFuBarOption("configType", "None")
