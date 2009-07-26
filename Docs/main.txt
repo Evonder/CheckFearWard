@@ -1,5 +1,4 @@
 == Overview
-[[https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=1779132|{{https://www.paypal.com/en_US/i/btn/x-click-but21.gif}}]]\\
 Track the current Fear Ward buffs cast by yourself or any member of your party or raid.
 
 === Check Fear Ward Description
@@ -21,4 +20,6 @@ Check Fear Ward has the ability to track who has a Fear Ward buff and how long i
 \\
 \\
 === Supported Translations
-//Please help localize this project// [[http://www.wowace.com/projects/check-fear-ward/localization/|HERE]]
+//Please help localize this project// [[http://www.wowace.com/projects/check-fear-ward/localization/|HERE]]\\
+\\
+[[https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=1779132|{{https://www.paypal.com/en_US/i/btn/x-click-but21.gif}}]]\\
