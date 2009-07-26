@@ -154,6 +154,13 @@ options = {
         LDBOptions = {
           type = 'group',
           order = 2,
+          disabled = function()
+            if (LibStub:GetLibrary("LibDataBroker-1.1", true)) then
+              return false
+            else
+              return true
+            end
+          end,
           name = L["LDB Options"],
           args = {
             MinimapIcon = {
@@ -195,10 +202,10 @@ options = {
           type = 'group',
           order = 3,
           disabled = function()
-            if not(LFBP) then
-              return true
-            else
+            if (LibStub:GetLibrary("LibFuBarPlugin-3.0", true)) then
               return false
+            else
+              return true
             end
           end,
           name = L["Fubar Options"],
