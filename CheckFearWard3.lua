@@ -255,10 +255,18 @@ function CFW3:AnnounceLostBuff(msg, unit)
 end
 
 --[[ LDB ]]--
+local nom15Font = CreateFont("nom15Font")
+nom15Font:SetFont(GameTooltipText:GetFont(), 15)
+
+local head17Font = CreateFont("head17Font")
+head17Font:SetFont(GameTooltipText:GetFont(), 17)
+
 local function OnEnter(self)
 	if tooltip then QTip:Release(tooltip) end
 	local tooltip = LibStub('LibQTip-1.0'):Acquire('CFW3Tip', 2, "LEFT", "RIGHT")
 	self.tooltip = tooltip
+	tooltip:SetFont(nom15Font)
+  tooltip:SetHeaderFont(head17Font)
 	tooltip:AddHeader(L["CheckFearWard3"])
 	if(members == nil) then
 		members = {};
