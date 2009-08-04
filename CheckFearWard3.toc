@@ -21,6 +21,7 @@
 ## X-Embeds: Ace3, LibDataBroker-1.1, LibDBIcon-1.0, LibQTip-1.0, LibAboutPanel
 #@end-no-lib-strip@ 
 ## SavedVariables: CheckFearWard3DB
+## LoadManagers: AddonLoader
 ## X-LoadOn-Group: true
 
 #@no-lib-strip@
