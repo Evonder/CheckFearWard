@@ -40,9 +40,7 @@ libs\LibAboutPanel\LibAboutPanel.lua
 libs\LibQTip-1.0\LibQTip-1.0.lua
 #@end-no-lib-strip@
 libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
-#@no-lib-strip@
 libs\LibDBIcon-1.0\LibDBIcon-1.0.lua
-#@end-no-lib-strip@
 
 ## Locale ##
 CheckFearWard3Locale.lua

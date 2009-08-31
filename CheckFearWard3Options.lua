@@ -166,10 +166,11 @@ options = {
             MinimapIcon = {
               type = "toggle",
               order = 1,
-              name = "Show minimap button",
-              desc = "Show the CFW3 minimap button",
+              name = L["Show minimap button"],
+              desc = L["Show the CFW3 minimap button"],
               get = function(info) return not CFW3.db.profile.MinimapIcon.hide end,
               set = function(info, value)
+                local LDBIcon = LibStub("LibDBIcon-1.0")
                 CFW3.db.profile.MinimapIcon.hide = not value
                 if value then LDBIcon:Show("CheckFearWard3") else LDBIcon:Hide("CheckFearWard3") end
               end,
