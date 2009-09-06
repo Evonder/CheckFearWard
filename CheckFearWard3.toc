@@ -11,7 +11,7 @@
 ## X-eMail: evonder AT omnesia DOT net
 ## X-Website: http://www.wowace.com/projects/check-fear-ward/
 ## X-Category: Buffs
-## X-Localizations: enUS
+## X-Localizations: enUS, koKR
 ## X-License: BSD
 ## Version: @project-version@
 ## Revision: @project-revision@
