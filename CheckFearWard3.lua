@@ -73,6 +73,8 @@ defaults = {
 		ctra = false,
 		audible = false,
 		debug = true,
+		HeaderFont = 14,
+		ContentFont = 12,
 		AttachMinimap = false,
 		HideMinimapButton = false,
 		MinimapIcon = {},
@@ -255,13 +257,13 @@ function CFW3:AnnounceLostBuff(msg, unit)
 end
 
 --[[ LDB ]]--
-local nom9Font = CreateFont("nom9Font")
-nom9Font:SetFont(GameTooltipText:GetFont(), 9)
-
-local head11Font = CreateFont("head11Font")
-head11Font:SetFont(GameTooltipText:GetFont(), 11)
-
 local function OnEnter(self)
+	local head14Font = CreateFont("head14Font")
+	head14Font:SetFont(GameTooltipText:GetFont(), CFW3.db.profile.HeaderFont or 14)
+	
+	local nom12Font = CreateFont("nom12Font")
+	nom12Font:SetFont(GameTooltipText:GetFont(), CFW3.db.profile.ContentFont or 12)
+
 	if tooltip then QTip:Release(tooltip) end
 	local tooltip = LibStub('LibQTip-1.0'):Acquire('CFW3Tip', 2, "LEFT", "RIGHT")
 	self.tooltip = tooltip

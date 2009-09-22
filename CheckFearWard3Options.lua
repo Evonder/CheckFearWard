@@ -166,6 +166,7 @@ options = {
             MinimapIcon = {
               type = "toggle",
               order = 1,
+              width = "full",
               name = L["Show minimap button"],
               desc = L["Show the CFW3 minimap button"],
               get = function(info) return not CFW3.db.profile.MinimapIcon.hide end,
@@ -174,7 +175,13 @@ options = {
                 CFW3.db.profile.MinimapIcon.hide = not value
                 if value then LDBIcon:Show("CheckFearWard3") else LDBIcon:Hide("CheckFearWard3") end
               end,
-              hidden = function() return not LDBIcon end,
+              disabled = function()
+                if (LibStub:GetLibrary("LibDBIcon-1.0", true)) then
+                  return false
+                else
+                  return true
+                end
+              end,             
             },
             showHighTime = {
               type = 'toggle',
@@ -196,6 +203,30 @@ options = {
               set = function()
                 CFW3.db.profile.showLowTime = not CFW3.db.profile.showLowTime
               end,
+            },
+             HeaderFont = {
+              type = 'range',
+              order = 4,
+              width = "double",
+							min = 10,
+							max = 24,
+							step = 1.00,
+              name = L["LDB Header Font Size"],
+              desc = L["LDB Header Font Size"],
+              get = function(info) return CFW3.db.profile.HeaderFont or 14 end,
+              set = function(info,v) CFW3.db.profile.HeaderFont = v end,
+            },
+            ContentFont = {
+              type = 'range',
+              order = 5,
+              width = "double",
+							min = 10,
+							max = 24,
+							step = 1.00,
+              name = L["LDB Content Font Size"],
+              desc = L["LDB Content Font Size"],
+              get = function(info) return CFW3.db.profile.ContentFont or 12 end,
+              set = function(info,v) CFW3.db.profile.ContentFont = v end,
             },
           },
         },
