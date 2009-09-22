@@ -258,17 +258,17 @@ end
 
 --[[ LDB ]]--
 local function OnEnter(self)
-	local head14Font = CreateFont("head14Font")
-	head14Font:SetFont(GameTooltipText:GetFont(), CFW3.db.profile.HeaderFont or 14)
+	local headFont = CreateFont("headFont")
+	headFont:SetFont(GameTooltipText:GetFont(), CFW3.db.profile.HeaderFont or 14)
 	
-	local nom12Font = CreateFont("nom12Font")
-	nom12Font:SetFont(GameTooltipText:GetFont(), CFW3.db.profile.ContentFont or 12)
+	local contentFont = CreateFont("contentFont")
+	contentFont:SetFont(GameTooltipText:GetFont(), CFW3.db.profile.ContentFont or 12)
 
 	if tooltip then QTip:Release(tooltip) end
 	local tooltip = LibStub('LibQTip-1.0'):Acquire('CFW3Tip', 2, "LEFT", "RIGHT")
 	self.tooltip = tooltip
-	tooltip:SetFont(nom9Font)
-  tooltip:SetHeaderFont(head11Font)
+	tooltip:SetFont(contentFont)
+  tooltip:SetHeaderFont(headFont)
 	tooltip:AddHeader(L["CheckFearWard3"])
 	if(members == nil) then
 		members = {};
