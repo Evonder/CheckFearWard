@@ -52,6 +52,7 @@ local time = time
 local mod = mod
 local buffSearchString = L["Fear Ward"]
 local members = {}
+local players = {}
 local currentHigh = 0
 local currentLow = 180
 local checkTotalWarded = 0
@@ -279,7 +280,13 @@ local function OnEnter(self)
 			if(members[k] == -1) then
 				line = tooltip:AddLine(k .. ": ", L["Unknown"])
 			else
-				line = tooltip:AddLine(k .. ": ", CFW3:CalculateTimeLeft(members[k]))
+				for j,v in pairs(CFW3.db.profile.players) do
+					if find(v,k) then
+						line = tooltip:AddLine(j .. " > " .. k .. ": ", CFW3:CalculateTimeLeft(members[k]))
+					else
+						line = tooltip:AddLine(k .. ": ", CFW3:CalculateTimeLeft(members[k]))
+					end
+				end
 			end
 			linesAdded = true;
 		end
@@ -361,7 +368,7 @@ function CFW3:IsLoggedIn()
 		end
 		self:OnTextUpdate()
 	end
---~ 	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", "CheckFearWard_CL")
+	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", "CheckFearWard_CL")
 	self:UnregisterEvent("PLAYER_LOGIN")
 	self:InitFubar()
 end
@@ -369,8 +376,8 @@ end
 function CFW3:CheckFearWard_CL(self, event, ...)
 	local combatEvent, sourceName, destName = arg2, arg4, arg7 or select(2,4,7)
 	local spellId, spellName = arg9, arg10 or select(9, 10)
-	if (combatEvent == "SPELL_AURA_APPLIED" and find(spellName,L["Fear Ward"])) then
-		playerName = sourceName
+	if (combatEvent == "SPELL_AURA_APPLIED" and find(spellName, buffSearchString)) then
+		players[sourceName] = destName
 	end
 end
 
