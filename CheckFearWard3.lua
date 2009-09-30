@@ -280,7 +280,7 @@ local function OnEnter(self)
 			if(members[k] == -1) then
 				line = tooltip:AddLine(k .. ": ", L["Unknown"])
 			else
-				for j,v in pairs(CFW3.db.profile.players) do
+				for j,v in pairs(players) do
 					if find(v,k) then
 						line = tooltip:AddLine(j .. " > " .. k .. ": ", CFW3:CalculateTimeLeft(members[k]))
 					else

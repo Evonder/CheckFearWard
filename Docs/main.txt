@@ -11,9 +11,12 @@ Check Fear Ward has the ability to track who has a Fear Ward buff and how long i
 === ToDo
 *--Ace3--
 *--LDB Support--
-*CombatLog filtering to find who cast Fear Ward buff on whom
+*--CombatLog filtering to find who cast Fear Ward buff on whom--
 
 === ChangeLog
+++r105++
+*++CombatLog filtering to find who cast Fear Ward buff on whom++
+
 ++r70++
 *++Switch from Rock to Ace3++
 *++LDB integration added --though tooltip is not "feed" ready--++
