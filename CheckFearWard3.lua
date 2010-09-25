@@ -247,13 +247,13 @@ function CFW3:AnnounceLostBuff(msg, unit)
 		PlaySoundFile("Interface\\AddOns\\CheckFearWard3\\Alert.wav")
 	end
 	if (CFW3.db.profile.brd and CFW3.db.profile.bs) then
-		SendChatMessage(msg, "SAY", ChatFrameEditBox.language, "CHANNEL")
+		SendChatMessage(msg, "SAY", language, "CHANNEL")
 	end
 	if (CFW3.db.profile.brd and CFW3.db.profile.bp and numparty >= 1) then
-		SendChatMessage(msg, "PARTY", ChatFrameEditBox.language, "CHANNEL")
+		SendChatMessage(msg, "PARTY", language, "CHANNEL")
 	end
 	if (CFW3.db.profile.brd and CFW3.db.profile.br and numraid >= 1) then
-		SendChatMessage(msg, "RAID", ChatFrameEditBox.language, "CHANNEL")
+		SendChatMessage(msg, "RAID", language, "CHANNEL")
 	end
 end
 
@@ -374,8 +374,7 @@ function CFW3:IsLoggedIn()
 end
 
 function CFW3:CheckFearWard_CL(self, event, ...)
-	local combatEvent, sourceName, destName = arg2, arg4, arg7 or select(2,4,7)
-	local spellId, spellName = arg9, arg10 or select(9, 10)
+	local combatEvent, _, sourceName, _, _, destName, _, spellId, spellName = select(1, ...)
 	if (combatEvent == "SPELL_AURA_APPLIED" and find(spellName, buffSearchString)) then
 		players[sourceName] = destName
 	end

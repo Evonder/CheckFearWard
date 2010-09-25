@@ -1,4 +1,5 @@
 ## Interface: 30300
+## X-Compatible-With: 40000 
 #@alpha@
 ## Title: CheckFearWard|cff00FF003|r SVN: @project-revision@
 #@end-alpha@
