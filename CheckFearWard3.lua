@@ -2,7 +2,7 @@
 CheckFearWard3
 
 File Author: @file-author@
-File Revision: @file-revision@
+File Revision: @file-abbreviated-hash@
 File Date: @file-date-iso@
 
 * Copyright (c) 2008, Evonder
@@ -38,11 +38,6 @@ local LDB = LibStub("LibDataBroker-1.1")
 local LDBIcon = LDB and LibStub("LibDBIcon-1.0")
 local CFW3, self = CheckFearWard3, CheckFearWard3
 
-local MAJOR_VERSION = "3.1"
-local MINOR_VERSION = 000 + tonumber(("$Revision: @project-revision@ $"):match("%d+"))
-CheckFearWard3.version = MAJOR_VERSION .. "." .. MINOR_VERSION
-CheckFearWard3.date = string.sub("$Date: @file-date-iso@ $", 1, 10)
-
 --[[ Locals ]]--
 local ipairs = ipairs
 local pairs = pairs
@@ -62,6 +57,14 @@ local initialscan = 1
 local launcher
 local tooltip
 local feedTimer
+
+local MAJOR_VERSION = "@project-version@"
+if (find(MAJOR_VERSION, "release" or "beta")) then
+	CFW3.version = MAJOR_VERSION
+else
+	CFW3.version = MAJOR_VERSION .. " DEV"
+end
+CFW3.date = "@file-date-iso@"
 
 defaults = {
 	profile = {
@@ -93,7 +96,7 @@ function CFW3:OnInitialize()
 
 	local AC = LibStub("AceConsole-3.0")
 	AC:RegisterChatCommand("cfw", function() CFW3:OpenOptions() end)
-	AC:Print("CheckFearWard3 " .. CheckFearWard3.version .. " Loaded!")
+	AC:Print("CheckFearWard3 " .. CFW3.version .. " Loaded!")
 
 	local ACR = LibStub("AceConfigRegistry-3.0")
 	ACR:RegisterOptionsTable("CheckFearWard3", options)

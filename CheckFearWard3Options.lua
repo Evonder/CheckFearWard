@@ -1,11 +1,13 @@
 --[[
 File Author: @file-author@
-File Revision: @file-revision@
+File Revision: @file-abbreviated-hash@
 File Date: @file-date-iso@
 ]]--
 local CheckFearWard3 = LibStub("AceAddon-3.0"):GetAddon("CheckFearWard3")
 local L = LibStub("AceLocale-3.0"):GetLocale("CheckFearWard3")
 local CFW3, self = CheckFearWard3, CheckFearWard3
+
+local sub = string.sub
 
 options = {
   name = CFW3.name,
@@ -20,7 +22,7 @@ options = {
       args = {
 				mainHeader = {
 					type = "description",
-					name = "  " .. L["Addon"].."\n\n",
+					name = "  " .. L["Addon"] .. "\n  " .. BS.version .. "\n  " .. sub(BS.date,6,7) .. "-" .. sub(BS.date,9,10) .. "-" .. sub(BS.date,1,4),
 					order = 1,
 					image = "Interface\\Icons\\spell_holy_excorcism",
 					imageWidth = 32, imageHeight = 32,
