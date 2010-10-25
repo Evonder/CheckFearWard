@@ -1,7 +1,7 @@
 ## Interface: 40000
 ## X-Compatible-With: 30300
 #@alpha@
-## Title: CheckFearWard|cff00FF003|r SVN: @project-version@
+## Title: CheckFearWard|cff00FF003|r DEV: @project-version@
 #@end-alpha@
 #@non-alpha@
 ## Title: CheckFearWard|cff00FF003|r
@@ -39,9 +39,9 @@ libs\AceLocale-3.0\AceLocale-3.0.xml
 libs\AceConfig-3.0\AceConfig-3.0.xml
 libs\LibAboutPanel\LibAboutPanel.lua
 libs\LibQTip-1.0\LibQTip-1.0.lua
-#@end-no-lib-strip@
 libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
 libs\LibDBIcon-1.0\LibDBIcon-1.0.lua
+#@end-no-lib-strip@
 
 ## Locale ##
 CheckFearWard3Locale.lua
