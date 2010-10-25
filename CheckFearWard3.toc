@@ -1,5 +1,4 @@
 ## Interface: 40000
-## X-Compatible-With: 30300
 #@alpha@
 ## Title: CheckFearWard|cff00FF003|r DEV: @project-version@
 #@end-alpha@
@@ -15,6 +14,7 @@
 ## X-Localizations: enUS, koKR
 ## X-License: BSD
 ## Version: @project-version@
+
 ## SavedVariables: CheckFearWard3DB
 
 ## OptionalDeps: Ace3, LibDataBroker-1.1, LibDBIcon-1.0, LibQTip-1.0, LibAboutPanel
