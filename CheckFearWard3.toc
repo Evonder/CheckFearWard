@@ -1,26 +1,23 @@
 ## Interface: 40000
-#@alpha@
-## Title: CheckFearWard|cff00FF003|r DEV: @project-version@
-#@end-alpha@
 #@non-alpha@
 ## Title: CheckFearWard|cff00FF003|r
 #@end-non-alpha@
+#@alpha@
+## Title: CheckFearWard|cff00FF003|r DEV: @project-version@
+#@end-alpha@
 ## Notes: Tracks the current Fear Ward's in the raid or party.
 ## Author: @project-author@
 ## X-Date: @project-date-iso@
 ## X-eMail: evonder AT omnesia DOT net
-## X-Website: http://www.wowace.com/projects/check-fear-ward/
+## X-License: BSD
+## X-Website: http://www.wowace.com/addons/check-fear-ward/
 ## X-Category: Buffs
 ## X-Localizations: enUS, koKR
-## X-License: BSD
+
+## OptionalDeps: Ace3, LibDataBroker-1.1, LibDBIcon-1.0, LibQTip-1.0, LibAboutPanel
 ## Version: @project-version@
 
 ## SavedVariables: CheckFearWard3DB
-
-## OptionalDeps: Ace3, LibDataBroker-1.1, LibDBIcon-1.0, LibQTip-1.0, LibAboutPanel
-#@no-lib-strip@
-## X-Embeds: Ace3, LibDataBroker-1.1, LibDBIcon-1.0, LibQTip-1.0, LibAboutPanel
-#@end-no-lib-strip@ 
 
 ## LoadManagers: AddonLoader
 ## X-LoadOn-Group: true
