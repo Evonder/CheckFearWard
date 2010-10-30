@@ -59,7 +59,7 @@ local tooltip
 local feedTimer
 
 local MAJOR_VERSION = "@project-version@"
-if (find(MAJOR_VERSION, "release" or "beta")) then
+if (select(3,find(MAJOR_VERSION, "(%a+)")) ~= "alpha") then
 	CFW3.version = MAJOR_VERSION
 else
 	CFW3.version = MAJOR_VERSION .. " DEV"
