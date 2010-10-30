@@ -38,7 +38,7 @@ libs\AceConfig-3.0\AceConfig-3.0.xml
 libs\LibAboutPanel\LibAboutPanel.lua
 libs\LibQTip-1.0\LibQTip-1.0.lua
 libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
-libs\LibDBIcon-1.0\LibDBIcon-1.0.lua
+libs\LibDBIcon-1.0\LibDBIcon-1.0\LibDBIcon-1.0.lua
 #@end-no-lib-strip@
 
 ## Locale ##
