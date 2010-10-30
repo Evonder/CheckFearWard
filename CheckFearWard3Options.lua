@@ -22,7 +22,7 @@ options = {
       args = {
 				mainHeader = {
 					type = "description",
-					name = "  " .. L["Addon"] .. "\n  " .. BS.version .. "\n  " .. sub(BS.date,6,7) .. "-" .. sub(BS.date,9,10) .. "-" .. sub(BS.date,1,4),
+					name = "  " .. L["Addon"] .. "\n  " .. CFW3.version .. "\n  " .. sub(CFW3.date,6,7) .. "-" .. sub(CFW3.date,9,10) .. "-" .. sub(CFW3.date,1,4),
 					order = 1,
 					image = "Interface\\Icons\\spell_holy_excorcism",
 					imageWidth = 32, imageHeight = 32,
