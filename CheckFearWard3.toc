@@ -21,6 +21,7 @@
 
 ## LoadManagers: AddonLoader
 ## X-LoadOn-Group: true
+## X-LoadOn-Slash: /checkfearward, /cfw
 
 #@no-lib-strip@
 libs\LibStub\LibStub.lua
