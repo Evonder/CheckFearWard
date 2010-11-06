@@ -1,10 +1,5 @@
 ## Interface: 40000
-#@non-alpha@
 ## Title: CheckFearWard|cff00FF003|r
-#@end-non-alpha@
-#@alpha@
-## Title: CheckFearWard|cff00FF003|r DEV: @project-version@
-#@end-alpha@
 ## Notes: Tracks the current Fear Ward's in the raid or party.
 ## Author: @project-author@
 ## X-Date: @project-date-iso@
