@@ -61,11 +61,11 @@ local feedTimer
 
 local MAJOR_VERSION = "@project-version@"
 if (select(3,find(MAJOR_VERSION, "(%a+)")) == "beta") then
-	TF3.version = sub(MAJOR_VERSION, 0, 10)
+	CFW3.version = sub(MAJOR_VERSION, 0, 10)
 elseif (select(3,find(MAJOR_VERSION, "(%a+)")) == "release") then
-	TF3.version = sub(MAJOR_VERSION, 0, 13)
+	CFW3.version = sub(MAJOR_VERSION, 0, 13)
 else
-	TF3.version = sub(MAJOR_VERSION, -8) .. " DEV"
+	CFW3.version = sub(MAJOR_VERSION, -8) .. " DEV"
 end
 CFW3.date = "@file-date-iso@"
 
