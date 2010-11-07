@@ -45,6 +45,7 @@ local find = string.find
 local formatIt = string.format
 local time = time
 local mod = mod
+local sub = string.sub
 local buffSearchString = L["Fear Ward"]
 local members = {}
 local players = {}
