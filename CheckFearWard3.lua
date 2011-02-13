@@ -5,7 +5,7 @@ File Author: @file-author@
 File Revision: @file-abbreviated-hash@
 File Date: @file-date-iso@
 
-* Copyright (c) 2008, Evonder
+* Copyright (c) 2011, @file-author@
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -19,10 +19,10 @@ File Date: @file-date-iso@
 *       names of its contributors may be used to endorse or promote products
 *       derived from this software without specific prior written permission.
 *
-* THIS SOFTWARE IS PROVIDED BY <copyright holder> ''AS IS'' AND ANY
+* THIS SOFTWARE IS PROVIDED BY @file-author@ ''AS IS'' AND ANY
 * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL <copyright holder> BE LIABLE FOR ANY
+* DISCLAIMED. IN NO EVENT SHALL @file-author@ BE LIABLE FOR ANY
 * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
 * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
 * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
@@ -31,6 +31,7 @@ File Date: @file-date-iso@
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ]]--
+
 CheckFearWard3 = LibStub("AceAddon-3.0"):NewAddon("CheckFearWard3", "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0")
 local L =  LibStub("AceLocale-3.0"):GetLocale("CheckFearWard3")
 local LibQTip = LibStub("LibQTip-1.0")
@@ -59,13 +60,11 @@ local launcher
 local tooltip
 local feedTimer
 
-local MAJOR_VERSION = "@project-version@"
-if (select(3,find(MAJOR_VERSION, "(%a+)")) == "beta") then
-	CFW3.version = sub(MAJOR_VERSION, 0, 10)
-elseif (select(3,find(MAJOR_VERSION, "(%a+)")) == "release") then
-	CFW3.version = sub(MAJOR_VERSION, 0, 13)
+local MAJOR_VERSION = GetAddOnMetadata("CheckFearWard3", "Version")
+if (len(MAJOR_VERSION)<=6) then
+	CFW3.version = sub(MAJOR_VERSION, 0, 6)
 else
-	CFW3.version = sub(MAJOR_VERSION, -8) .. " DEV"
+	CFW3.version = MAJOR_VERSION .. " DEV"
 end
 CFW3.date = "@file-date-iso@"
 
