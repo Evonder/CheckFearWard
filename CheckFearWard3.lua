@@ -250,7 +250,7 @@ function CFW3:AnnounceLostBuff(msg, unit)
 		RaidNotice_AddMessage(RaidBossEmoteFrame,msg , ChatTypeInfo["RAID_WARNING"])
 	end
 	if (CFW3.db.profile.audible) then
-		PlaySoundFile("Interface\\AddOns\\CheckFearWard3\\Alert.wav")
+		PlaySoundFile("Interface\\AddOns\\CheckFearWard3\\Alert.wav", "SFX")
 	end
 	if (CFW3.db.profile.brd and CFW3.db.profile.bs) then
 		SendChatMessage(msg, "SAY", language, "CHANNEL")
