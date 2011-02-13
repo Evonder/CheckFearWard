@@ -44,6 +44,7 @@ local ipairs = ipairs
 local pairs = pairs
 local find = string.find
 local formatIt = string.format
+local len = string.len
 local time = time
 local mod = mod
 local sub = string.sub
