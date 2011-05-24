@@ -59,6 +59,7 @@ local initialscan = 1
 local launcher
 local tooltip
 local feedTimer
+local tocVersion = select(4, GetBuildInfo())
 
 local MAJOR_VERSION = GetAddOnMetadata("CheckFearWard3", "Version")
 if (len(MAJOR_VERSION)<=6) then
@@ -379,7 +380,11 @@ function CFW3:IsLoggedIn()
 end
 
 function CFW3:CheckFearWard_CL(self, event, ...)
-	local combatEvent, _, sourceName, _, _, destName, _, spellId, spellName = select(1, ...)
+	if (tocVersion < 40200) then
+		local combatEvent, _, _, sourceName, _, _, destName, _, spellId, spellName = select(1, ...)
+	else 
+		local combatEvent, _, _, sourceName, _, _, _, destName, _, _, spellId, spellName = select(1, ...)
+	end
 	if (combatEvent == "SPELL_AURA_APPLIED" and find(spellName, buffSearchString)) then
 		players[sourceName] = destName
 	end
