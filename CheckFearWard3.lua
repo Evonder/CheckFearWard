@@ -380,11 +380,7 @@ function CFW3:IsLoggedIn()
 end
 
 function CFW3:CheckFearWard_CL(self, event, ...)
-	if (tocVersion < 40200) then
-		local combatEvent, _, _, sourceName, _, _, destName, _, spellId, spellName = select(1, ...)
-	else 
-		local combatEvent, _, _, sourceName, _, _, _, destName, _, _, spellId, spellName = select(1, ...)
-	end
+	local _, combatEvent, _, _, sourceName, _, _, _, destName, _, _, spellId, spellName = select(2, ...)
 	if (combatEvent == "SPELL_AURA_APPLIED" and find(spellName, buffSearchString)) then
 		players[sourceName] = destName
 	end
