@@ -379,8 +379,8 @@ function CFW3:IsLoggedIn()
 	self:InitFubar()
 end
 
-function CFW3:CheckFearWard_CL(self, event, ...)
-	local _, combatEvent, _, _, sourceName, _, _, _, destName, _, _, spellId, spellName = select(2, ...)
+function CFW3:CheckFearWard_CL(event, ...)
+	local timestamp, combatEvent, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellId, spellName, spellSchool = select(1, ...)
 	if (combatEvent == "SPELL_AURA_APPLIED" and find(spellName, buffSearchString)) then
 		players[sourceName] = destName
 	end
