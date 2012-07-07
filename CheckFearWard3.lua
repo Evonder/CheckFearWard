@@ -60,6 +60,8 @@ local launcher
 local tooltip
 local feedTimer
 local tocVersion = select(4, GetBuildInfo())
+local numraid = GetNumGroupMembers()
+local numparty = GetNumSubgroupMembers()
 
 local MAJOR_VERSION = GetAddOnMetadata("CheckFearWard3", "Version")
 if (len(MAJOR_VERSION)<=6) then
@@ -124,8 +126,6 @@ function CFW3:OpenOptions()
 end
 
 function CFW3:OnDataUpdate()
-	local numraid = GetNumRaidMembers()
-	local numparty = GetNumPartyMembers()
 	currentHigh = 0
 	currentLow = 180
 	checkTotalWarded = 0
@@ -241,8 +241,6 @@ function CFW3:CalculateTimeLeft(recordedTime)
 end
 
 function CFW3:AnnounceLostBuff(msg, unit)
-	local numraid = GetNumRaidMembers()
-	local numparty = GetNumPartyMembers()
 	if (CFW3.db.profile.dcf) then
 		DEFAULT_CHAT_FRAME:AddMessage(msg, 1.0, 0.0, 0.0, 0.0, 53, 5.0)
 	end
