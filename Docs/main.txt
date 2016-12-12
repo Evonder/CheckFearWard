@@ -5,21 +5,7 @@ Track the current Fear Ward buffs cast by yourself or any member of your party o
 Check Fear Ward has the ability to track who has a Fear Ward buff and how long is left on said buff. It also has the ability to alert you when the buff has been consumed or has expired, and on top of a personal alert it also is able to alert your group by adding a message to say, party or raid.
 
 === Configuration
-++r68++
 <<code php>>/CFW<</code>>
-
-=== ToDo
-*--Ace3--
-*--LDB Support--
-*--CombatLog filtering to find who cast Fear Ward buff on whom--
-
-=== ChangeLog
-++r105++
-*++CombatLog filtering to find who cast Fear Ward buff on whom++
-
-++r70++
-*++Switch from Rock to Ace3++
-*++LDB integration added --though tooltip is not "feed" ready--++
 \\
 \\
 === Supported Translations

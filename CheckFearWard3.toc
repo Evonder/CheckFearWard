@@ -1,4 +1,4 @@
-## Interface: 50100
+## Interface: 70300
 ## Title: CheckFearWard|cff00FF003|r
 ## Notes: Tracks the current Fear Ward's in the raid or party.
 ## Notes-zhCN: 在小队或团队追踪恐惧结界。
@@ -7,7 +7,7 @@
 ## X-Date: @project-date-iso@
 ## X-eMail: evonder AT omnesia DOT net
 ## X-License: BSD
-## X-Website: http://www.wowace.com/addons/check-fear-ward/
+## X-Website: https://www.wowace.com/projects/check-fear-ward
 ## X-Category: Buffs
 ## X-Localizations: enUS, koKR, zhCN, zhTW
 
