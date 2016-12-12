@@ -1,4 +1,4 @@
-## Interface: 70300
+## Interface: 70000
 ## Title: CheckFearWard|cff00FF003|r
 ## Notes: Tracks the current Fear Ward's in the raid or party.
 ## Notes-zhCN: 在小队或团队追踪恐惧结界。
