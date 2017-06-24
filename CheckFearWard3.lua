@@ -69,7 +69,7 @@ if (len(MAJOR_VERSION)<=6) then
 else
 	CFW3.version = MAJOR_VERSION .. " DEV"
 end
-CFW3.date = "@file-date-iso@"
+GetAddOnMetadata("CheckFearWard3", "X-Date")
 
 defaults = {
 	profile = {
