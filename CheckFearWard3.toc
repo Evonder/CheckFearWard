@@ -1,8 +1,21 @@
-## Interface: 70100
-## Title: CheckFearWard|cff00FF003|r
-## Notes: Tracks the current Fear Ward's in the raid or party.
-## Notes-zhCN: 在小队或团队追踪恐惧结界。
-## Notes-zhTW: 在小隊或團隊追踪恐懼結界。
+## Interface: 11304
+## Version: @project-version@
+## X-Curse-Project-ID: 16408
+
+#@non-alpha@
+## Title: @localization(locale="enUS", key="Title")@
+## Title-deDE: @localization(locale="deDE", key="Title")@
+## Title-zhCN: @localization(locale="zhCN", key="Title")@
+## Title-zhTW: @localization(locale="zhTW", key="Title")@
+## Title-frFR: @localization(locale="koKR", key="Title")@
+#@end-non-alpha@
+#@alpha@
+## Title: @localization(locale="enUS", key="Title")@ DEV
+## Title-deDE: @localization(locale="deDE", key="Title")@ DEV
+## Title-zhCN: @localization(locale="zhCN", key="Title")@ DEV
+## Title-zhTW: @localization(locale="zhTW", key="Title")@ DEV
+## Title-frFR: @localization(locale="koKR", key="Title")@ DEV
+#@end-alpha@
 ## Author: @project-author@
 ## X-Date: @project-date-iso@
 ## X-eMail: evonder AT omnesia DOT net
@@ -10,11 +23,10 @@
 ## X-Website: https://www.wowace.com/projects/check-fear-ward
 ## X-Category: Buffs
 ## X-Localizations: enUS, koKR, zhCN, zhTW
+## SavedVariables: CheckFearWard3DB
 
 ## OptionalDeps: Ace3, LibDataBroker-1.1, LibDBIcon-1.0, LibQTip-1.0, LibAboutPanel
-## Version: @project-version@
-
-## SavedVariables: CheckFearWard3DB
+## X-Embeds: Ace3, LibDataBroker-1.1, LibDBIcon-1.0, LibQTip-1.0, LibAboutPanel
 
 ## LoadManagers: AddonLoader
 ## X-LoadOn-Group: true

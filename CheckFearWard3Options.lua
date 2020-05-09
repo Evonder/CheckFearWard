@@ -3,7 +3,7 @@ File Author: @file-author@
 File Revision: @file-abbreviated-hash@
 File Date: @file-date-iso@
 ]]--
-local CheckFearWard3 = LibStub("AceAddon-3.0"):GetAddon("CheckFearWard3")
+local CheckFearWard3 = CheckFearWard3 or LibStub("AceAddon-3.0"):GetAddon("CheckFearWard3")
 local L = LibStub("AceLocale-3.0"):GetLocale("CheckFearWard3")
 local CFW3 = CheckFearWard3
 

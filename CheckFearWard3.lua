@@ -31,7 +31,7 @@ File Date: @file-date-iso@
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ]]--
-CheckFearWard3 = LibStub("AceAddon-3.0"):NewAddon("CheckFearWard3", "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0")
+local CheckFearWard3 = CheckFearWard3 or LibStub("AceAddon-3.0"):NewAddon("CheckFearWard3", "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0")
 local L =  LibStub("AceLocale-3.0"):GetLocale("CheckFearWard3")
 local LibQTip = LibStub("LibQTip-1.0")
 local LDB = LibStub("LibDataBroker-1.1")
@@ -122,6 +122,37 @@ end
 -- :OpenOptions(): Opens the options window.
 function CFW3:OpenOptions()
 	InterfaceOptionsFrame_OpenToCategory(self.OptionsPanel)
+end
+
+function CFW3:IsLoggedIn()
+	self:ScheduleRepeatingTimer("OnDataUpdate", 0.25)
+	if LDB then	
+		self.launcher = LDB:NewDataObject(L["CheckFearWard3"], {
+			type = "data source",
+			icon = "Interface\\Icons\\spell_holy_excorcism",
+			label = "",
+			value = OnTextUpdate,
+			OnClick = OnClick,
+			OnEnter = function(self)
+				OnEnter(self)
+			end,
+			OnLeave = function(self)
+				if tooltip and MouseIsOver(tooltip) then 
+					tooltip:SetScript("OnUpdate", HideTooltips)
+				else
+					OnLeave(self)
+				end
+			end,
+		})
+		self.feedTimer = self:ScheduleRepeatingTimer("OnTextUpdate", 0.25)
+			
+		if LDBIcon then
+			LDBIcon:Register("CheckFearWard3", self.launcher, self.db.profile.MinimapIcon)
+		end
+		self:OnTextUpdate()
+	end
+	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", "CheckFearWard_CL")
+	self:UnregisterEvent("PLAYER_LOGIN")
 end
 
 function CFW3:OnDataUpdate()
@@ -342,37 +373,6 @@ function CFW3:OnTextUpdate()
 	end
 	self.launcher.text = str
 	return str
-end
-
-function CFW3:IsLoggedIn()
-	self:ScheduleRepeatingTimer("OnDataUpdate", 0.25)
-	if LDB then	
-		self.launcher = LDB:NewDataObject(L["CheckFearWard3"], {
-			type = "data source",
-			icon = "Interface\\Icons\\spell_holy_excorcism",
-			label = "",
-			value = OnTextUpdate,
-			OnClick = OnClick,
-			OnEnter = function(self)
-				OnEnter(self)
-			end,
-			OnLeave = function(self)
-				if tooltip and MouseIsOver(tooltip) then 
-					tooltip:SetScript("OnUpdate", HideTooltips)
-				else
-					OnLeave(self)
-				end
-			end,
-		})
-		self.feedTimer = self:ScheduleRepeatingTimer("OnTextUpdate", 0.25)
-			
-		if LDBIcon then
-			LDBIcon:Register("CheckFearWard3", self.launcher, self.db.profile.MinimapIcon)
-		end
-		self:OnTextUpdate()
-	end
-	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", "CheckFearWard_CL")
-	self:UnregisterEvent("PLAYER_LOGIN")
 end
 
 function CFW3:CheckFearWard_CL(event, ...)
