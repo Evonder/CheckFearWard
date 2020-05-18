@@ -1,0 +1,26 @@
+name: Build Release
+on:
+  push:
+    branches:
+      #- master
+    tags:
+      - '**'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      # pull the repository (required)
+      - uses: actions/checkout@v1
+
+      # fetch release from github and make executable
+      - name: Fetch Script
+        run: |
+          wget -O release.sh https://raw.githubusercontent.com/Evonder/packager/master/release.sh
+          chmod +x release.sh
+
+      - name: Package and Push
+        run: ./release.sh -p 13896
+        env:
+          CF_API_KEY: ${{ secrets.CF_API_KEY }}
+          GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
