@@ -20,7 +20,7 @@ jobs:
           chmod +x release.sh
 
       - name: Package and Push
-        run: ./release.sh -p 13896
+        run: ./release.sh -p 13896 -g 1.13.5
         env:
           CF_API_KEY: ${{ secrets.CF_API_KEY }}
           GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
